@@ -3,7 +3,7 @@ import env from 'dotenv';
 env.config();
 const db = mysql.createConnection({
     host:process.env.DB_HOST,
-    user:process.env.D_BUSER,
+    user:process.env.DB_BUSER,
     password:process.env.DB_USERPASSWORD,
     database:process.env.DB_DATABASE
 });
