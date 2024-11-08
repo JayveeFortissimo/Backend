@@ -1,5 +1,6 @@
 import mysql from 'mysql2';
 import env from 'dotenv';
+
 env.config();
 const db = mysql.createConnection({
     host:process.env.DB_HOST,
@@ -8,7 +9,7 @@ const db = mysql.createConnection({
     database:process.env.DB_DATABASE
 });
 
-
+//TRY
 
 console.log("Host:", process.env.DB_HOST)
 console.log("user:", process.env.DB_USER)
