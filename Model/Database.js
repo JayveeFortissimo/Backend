@@ -9,7 +9,7 @@ const db = mysql.createConnection({
     database:process.env.DB_DATABASE
 });
 
-//TRY
+//TRYassdasd
 
 console.log("Host:", process.env.DB_HOST)
 console.log("user:", process.env.DB_USER)
