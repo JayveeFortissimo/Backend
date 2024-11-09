@@ -21,7 +21,7 @@ const io = new Server(httpServer, {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 app.use(cors({
   origin: 'http://localhost:5173',
@@ -54,7 +54,8 @@ io.on('connection', (socket) => {
   });
 });
 
-app.get('https://backend-production-024f.up.railway.app', (req, res) => {
+
+app.get('/', (req, res) => {
   res.json({ message: 'Hello from API!' });
 });
 
