@@ -3,14 +3,12 @@ import env from 'dotenv';
 
 env.config();
 
-
 const db = mysql.createConnection({
-    host:'srv1415.hstgr.io',
-    user:'u120939471_cristobal',
-    password:'zuQ!c|f!i2$N',
-    database:'u120939471_cristobal'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_USERPASSWORD,
+    database: process.env.DB_DATABASE
 });
-//
 
 console.log("Myport:", process.env.PORT)
 
