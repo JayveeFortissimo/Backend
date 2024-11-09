@@ -6,6 +6,9 @@ env.config();
 
 
 
+const query = util.promisify(db.query).bind(db); // Promisify db.query
+
+
 function generateOTP() {
   return Math.floor(10000 + Math.random() * 90000);
 }
@@ -84,49 +87,49 @@ function generateOTP() {
 }
 
 
+async function login(req, res) {
+  const { email, password } = req.body;
 
-async function login(req,res){
-  
-    const { email, password } = req.body;
-    const sqlALL = "SELECT * FROM credentials WHERE email = ?";
+  const sqlSelect = "SELECT * FROM credentials WHERE email = ?";
+  const sqlUpdateStatus = "UPDATE credentials SET status = ? WHERE email = ?";
+  const status = true;
 
-    const sqlStatus =  `UPDATE credentials SET status =? WHERE email=?`;
-      const status = true;
-    try {
-      db.query(sqlALL, [email], async (err, result) => {
-        if (err) return res.status(500).json({ error: "Database error" });
-  
-        if (result.length === 0) {
-          return res.status(404).json("Data doesn't exist");
-        }
-  
-        const data = result[0];
+  try {
+      const result = await query(sqlSelect, [email]);
 
-        const passwordMatch = await bcypt.compare(password, data.password);
-        if (!passwordMatch) {
-          return res.status(401).json("Invalid credentials");
-        }
-       
-        const token = jwt.sign({id:data.id,email: data.email}, process.env.ACESSTOKEN, { expiresIn: '5h' });
-  
-        setTimeout(()=>{
-            return res.status(201).json({ status: 'success', email, token,uersID:data.id,is_Admin:Boolean(data.is_Admin)});
-        },2000);
+      if (result.length === 0) {
+          return res.status(404).json({ error: "Data doesn't exist" });
+      }
+
+      const userData = result[0];
+
+      const passwordMatch = await bcrypt.compare(password, userData.password);
+      if (!passwordMatch) {
+          return res.status(401).json({ error: "Invalid credentials" });
+      }
+
+      const token = jwt.sign({ id: userData.id, email: userData.email }, process.env.ACESSTOKEN, { expiresIn: '5h' });
+
+      // Update status in database
+      await query(sqlUpdateStatus, [status, email]);
+
+      // Respond with success
+      setTimeout(() => {
+          return res.status(201).json({
+              status: 'success',
+              email: userData.email,
+              token,
+              userID: userData.id,
+              isAdmin: Boolean(userData.is_Admin)
+          });
+      }, 2000); // Delayed response (for testing purposes?)
       
-      });
-
-
-       db.query(sqlStatus,[status,email],(err,res)=>{
-        if(err) return res.json("Have A Problem Here");
-       })
-
-
-    } catch (error) {
+  } catch (error) {
       console.error(error);
       return res.status(500).json({ error: "Internal server error" });
-    }
- 
+  }
 }
+
 
 
 //!Log OUTS
