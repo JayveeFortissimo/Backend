@@ -11,6 +11,7 @@ console.log("Database:", process.env.DB_DATABASE || "undefined");
 
 
 
+
 const db = mysql.createConnection({
     host:process.env.DB_HOST,
     user:process.env.DB_USER,
