@@ -4,14 +4,6 @@ import env from 'dotenv';
 env.config();
 
 
-console.log("Host:", process.env.DB_HOST || "undefined");
-console.log("User:", process.env.DB_USER || "undefined");
-console.log("Password:", process.env.DB_USERPASSWORD || "undefined");
-console.log("Database:", process.env.DB_DATABASE || "undefined");
-
-
-
-
 const db = mysql.createConnection({
     host:'srv1415.hstgr.io',
     user:'u120939471_cristobal',
