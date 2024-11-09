@@ -10,7 +10,9 @@ const db = mysql.createConnection({
     password:'zuQ!c|f!i2$N',
     database:'u120939471_cristobal'
 });
+//
 
+console.log("Myport:", process.env.PORT)
 
 db.connect((err) => {
     if (err) {
