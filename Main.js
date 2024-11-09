@@ -13,7 +13,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: 'http://localhost:5173',
+    origin: 'https://backend-production-1fc2.up.railway.app',
     methods: ['GET', 'POST'],
     credentials: true
   }
@@ -22,7 +22,7 @@ const io = new Server(httpServer, {
 const PORT = process.env.PORT || 3000;
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'https://backend-production-1fc2.up.railway.app',
   credentials: true
 }));
 
