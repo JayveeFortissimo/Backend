@@ -17,7 +17,7 @@ const httpServer = createServer(app);
 
 
 app.use(cors({
-  origin:'https://frontend-chi-eight-28.vercel.app',
+  origin:['https://frontend-chi-eight-28.vercel.app/'],
   credentials: true
 }));
 
