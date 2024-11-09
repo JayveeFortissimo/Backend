@@ -23,7 +23,7 @@ app.use(cors({
     'https://frontend-3g30f0t4c-jayveefortissimos-projects.vercel.app',
      '*'
   ],
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  methods: ["GET","HEAD","PUT","PATCH","POST","DELETE"],
   credentials: true,
   optionsSuccessStatus: 204
 }));
