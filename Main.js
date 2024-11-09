@@ -19,8 +19,14 @@ const httpServer = createServer(app);
 app.use(cors({
   origin:[
     'https://frontend-chi-eight-28.vercel.app',
-    'https://frontend-chi-eight-28.vercel.app/'],
-  credentials: true
+    'https://frontend-chi-eight-28.vercel.app/',
+    'https://frontend-3g30f0t4c-jayveefortissimos-projects.vercel.app/',
+    'https://frontend-3g30f0t4c-jayveefortissimos-projects.vercel.app',
+     '*'
+  ],
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+  optionsSuccessStatus: 204
 }));
 
 
@@ -35,7 +41,12 @@ const io = new Server(httpServer, {
   cors: {
     origin:[
       'https://frontend-chi-eight-28.vercel.app',
-      'https://frontend-chi-eight-28.vercel.app/'],
+      'https://frontend-chi-eight-28.vercel.app/',
+      'http://localhost:5173/',
+      'https://frontend-3g30f0t4c-jayveefortissimos-projects.vercel.app/',
+      'https://frontend-3g30f0t4c-jayveefortissimos-projects.vercel.app',
+       '*'
+    ],
     methods:['GET', 'POST'],
     credentials: true
   }
