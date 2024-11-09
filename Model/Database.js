@@ -4,26 +4,24 @@ env.config();
 
 import mysql from 'mysql2';
 
-const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE
+// Create a connection pool
+const db = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  waitForConnections: true,   // Ensure the app waits for a connection if the pool is full
+  connectionLimit: 10,        // Max number of connections in the pool
+  queueLimit: 0               // No limit for the query queue
 });
 
-console.log("Myport:", process.env.PORT)
-console.log("DB_HOST:", process.env.DB_HOST);   // Should print 'srv1415.hstgr.io'
-console.log("DB_USER:", process.env.DB_USER);   // Should print 'u120939471_cristobal'
-console.log("DB_DATABASE:", process.env.DB_DATABASE);   // Should print 'u120939471_cristobal'
-
-//TRy
-db.connect((err) => {
-    if (err) {
-        console.error('Error connecting to database:', err);
-        throw err;
-    } else {
-        console.log('Connected to database!');
-    }
+// Example query using the pool
+db.query('SELECT NOW()', (err, results) => {
+  if (err) {
+    console.error('Database query error:', err);
+    return;
+  }
+  console.log('Current time from DB:', results);
 });
 
 
