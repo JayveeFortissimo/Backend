@@ -11,9 +11,11 @@ env.config();
 
 const app = express();
 const httpServer = createServer(app);
+
+//SA may front end pala tong mga urls hehehhe
 const io = new Server(httpServer, {
   cors: {
-    origin: 'https://cristobal.shop',
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST'],
     credentials: true
   }
@@ -22,7 +24,7 @@ const io = new Server(httpServer, {
 const PORT = process.env.PORT || 3000;
 
 app.use(cors({
-  origin: 'https://cristobal.shop',
+  origin: 'http://localhost:5173',
   credentials: true
 }));
 
