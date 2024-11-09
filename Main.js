@@ -1,5 +1,4 @@
 import express from 'express';
-import cookie from 'cookie-parser';
 import cors from 'cors';
 import routes from './Routes/Router.js';
 import bodyParser from 'body-parser';
@@ -31,7 +30,7 @@ app.use(cors({
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookie());
+
 
 //SA may front end pala tong mga urls hehehhe
 const io = new Server(httpServer, {
