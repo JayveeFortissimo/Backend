@@ -2,12 +2,8 @@ import db from '../Model/Database.js';
 import bcypt from 'bcrypt';
 import env from 'dotenv';
 import jwt from 'jsonwebtoken';
-import util from 'util';
 env.config();
 
-
-
-const query = util.promisify(db.query).bind(db); // Promisify db.query
 
 
 function generateOTP() {
@@ -88,49 +84,49 @@ function generateOTP() {
 }
 
 
-async function login(req, res) {
-  const { email, password } = req.body;
 
-  const sqlSelect = "SELECT * FROM credentials WHERE email = ?";
-  const sqlUpdateStatus = "UPDATE credentials SET status = ? WHERE email = ?";
-  const status = true;
+async function login(req,res){
+  
+    const { email, password } = req.body;
+    const sqlALL = "SELECT * FROM credentials WHERE email = ?";
 
-  try {
-      const result = await query(sqlSelect, [email]);
+    const sqlStatus =  `UPDATE credentials SET status =? WHERE email=?`;
+      const status = true;
+    try {
+      db.query(sqlALL, [email], async (err, result) => {
+        if (err) return res.status(500).json({ error: "Database error" });
+  
+        if (result.length === 0) {
+          return res.status(404).json("Data doesn't exist");
+        }
+  
+        const data = result[0];
 
-      if (result.length === 0) {
-          return res.status(404).json({ error: "Data doesn't exist" });
-      }
-
-      const userData = result[0];
-
-      const passwordMatch = await bcrypt.compare(password, userData.password);
-      if (!passwordMatch) {
-          return res.status(401).json({ error: "Invalid credentials" });
-      }
-
-      const token = jwt.sign({ id: userData.id, email: userData.email }, process.env.ACESSTOKEN, { expiresIn: '5h' });
-
-      // Update status in database
-      await query(sqlUpdateStatus, [status, email]);
-
-      // Respond with success
-      setTimeout(() => {
-          return res.status(201).json({
-              status: 'success',
-              email: userData.email,
-              token,
-              userID: userData.id,
-              isAdmin: Boolean(userData.is_Admin)
-          });
-      }, 2000); // Delayed response (for testing purposes?)
+        const passwordMatch = await bcypt.compare(password, data.password);
+        if (!passwordMatch) {
+          return res.status(401).json("Invalid credentials");
+        }
+       
+        const token = jwt.sign({id:data.id,email: data.email}, process.env.ACESSTOKEN, { expiresIn: '5h' });
+  
+        setTimeout(()=>{
+            return res.status(201).json({ status: 'success', email, token,uersID:data.id,is_Admin:Boolean(data.is_Admin)});
+        },2000);
       
-  } catch (error) {
+      });
+
+
+       db.query(sqlStatus,[status,email],(err,res)=>{
+        if(err) return res.json("Have A Problem Here");
+       })
+
+
+    } catch (error) {
       console.error(error);
       return res.status(500).json({ error: "Internal server error" });
-  }
+    }
+ 
 }
-
 
 
 //!Log OUTS
