@@ -9,16 +9,24 @@ import { Server } from 'socket.io';
 
 env.config();
 
-const app = express();
-const httpServer = createServer(app);
 
 
 const PORT = process.env.PORT || 8080;
+const app = express();
+const httpServer = createServer(app);
+
 
 app.use(cors({
   origin:'https://frontend-chi-eight-28.vercel.app',
   credentials: true
 }));
+
+
+
+app.use(express.json());
+app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookie());
 
 //SA may front end pala tong mga urls hehehhe
 const io = new Server(httpServer, {
@@ -29,10 +37,15 @@ const io = new Server(httpServer, {
   }
 });
 
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookie());
+
+// WebSocket connection
+io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+});
 
 // For accessing images added by admin
 app.use('/uploads', express.static('./uploads'));
@@ -44,16 +57,6 @@ app.use((req, res, next) => {
 
 app.use(routes);
 
-
-
-// WebSocket connection
-io.on('connection', (socket) => {
-  console.log('A user connected');
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-  });
-});
 
 /*
 app.get('/', (req, res) => {
