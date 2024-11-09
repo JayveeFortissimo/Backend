@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
   });
 });
 
-app.get('backend-production-024f.up.railway.app', (req, res) => {
+app.get('https://backend-production-024f.up.railway.app', (req, res) => {
   res.json({ message: 'Hello from API!' });
 });
 
