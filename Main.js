@@ -54,6 +54,10 @@ io.on('connection', (socket) => {
   });
 });
 
+app.get('backend-production-024f.up.railway.app', (req, res) => {
+  res.json({ message: 'Hello from API!' });
+});
+
 
 httpServer.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
