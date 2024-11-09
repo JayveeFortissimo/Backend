@@ -12,21 +12,22 @@ env.config();
 const app = express();
 const httpServer = createServer(app);
 
-//SA may front end pala tong mga urls hehehhe
-const io = new Server(httpServer, {
-  cors: {
-    origin: 'https://frontend-chi-eight-28.vercel.app',
-    methods: ['GET', 'POST'],
-    credentials: true
-  }
-});
 
 const PORT = process.env.PORT || 8080;
 
 app.use(cors({
-  origin: 'https://frontend-chi-eight-28.vercel.app',
+  origin:'https://frontend-chi-eight-28.vercel.app',
   credentials: true
 }));
+
+//SA may front end pala tong mga urls hehehhe
+const io = new Server(httpServer, {
+  cors: {
+    origin:'https://frontend-chi-eight-28.vercel.app',
+    methods:['GET', 'POST'],
+    credentials: true
+  }
+});
 
 app.use(express.json());
 app.use(bodyParser.json());
