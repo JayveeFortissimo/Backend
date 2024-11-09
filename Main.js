@@ -57,6 +57,7 @@ io.on('connection', (socket) => {
 
 
 app.get('/', (req, res) => {
+  console.log("Request received at root endpoint");
   res.json({ message: 'Hello from API!' });
 });
 
