@@ -41,7 +41,6 @@ const io = new Server(httpServer, {
     origin:[
       'https://frontend-chi-eight-28.vercel.app',
       'https://frontend-chi-eight-28.vercel.app/',
-      'http://localhost:5173/',
       'https://frontend-3g30f0t4c-jayveefortissimos-projects.vercel.app/',
       'https://frontend-3g30f0t4c-jayveefortissimos-projects.vercel.app',
        '*'
