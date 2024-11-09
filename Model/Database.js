@@ -7,8 +7,8 @@ env.config();
 const db = mysql.createConnection({
     host:'srv1415.hstgr.io',
     user:'u120939471_cristobal',
-    password:'u120939471_cristobal',
-    database:'zuQ!c|f!i2$N'
+    password:'zuQ!c|f!i2$N',
+    database:'u120939471_cristobal'
 });
 
 //TRYassdasd
