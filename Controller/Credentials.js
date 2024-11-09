@@ -2,6 +2,7 @@ import db from '../Model/Database.js';
 import bcypt from 'bcrypt';
 import env from 'dotenv';
 import jwt from 'jsonwebtoken';
+import util from 'util';
 env.config();
 
 
