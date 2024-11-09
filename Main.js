@@ -16,14 +16,14 @@ const httpServer = createServer(app);
 const PORT = process.env.PORT || 8080;
 
 app.use(cors({
-  origin:'*',
+  origin:'https://frontend-chi-eight-28.vercel.app',
   credentials: true
 }));
 
 //SA may front end pala tong mga urls hehehhe
 const io = new Server(httpServer, {
   cors: {
-    origin:'*',
+    origin:'https://frontend-chi-eight-28.vercel.app',
     methods:['GET', 'POST'],
     credentials: true
   }
