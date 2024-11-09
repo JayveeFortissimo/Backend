@@ -24,7 +24,7 @@ function allItems(req, res) {
   // Fetch all items if userId is null
   if (!userId) {
     db.query(sqlItems, (err, result) => {
-      if (err) return res.status(404).json("Items not found");
+      if (err) return res.status(500).json({ error: "Internal server error while fetching items" });
       return processItems(result, null, res);
     });
   } else {
