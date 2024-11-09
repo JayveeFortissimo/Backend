@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import routes from './Routes/Router.js';
-import bodyParser from 'body-parser';
 import env from 'dotenv';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
@@ -27,7 +26,6 @@ app.use(cors({
 
 
 app.use(express.json());
-app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
 
