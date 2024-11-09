@@ -13,10 +13,10 @@ console.log("Database:", process.env.DB_DATABASE || "undefined");
 
 
 const db = mysql.createConnection({
-    host:process.env.DB_HOST,
-    user:process.env.DB_USER,
-    password:process.env.DB_USERPASSWORD,
-    database:process.env.DB_DATABASE
+    host:'srv1415.hstgr.io',
+    user:'u120939471_cristobal',
+    password:'u120939471_cristobal',
+    database:'zuQ!c|f!i2$N'
 });
 
 //TRYassdasd
