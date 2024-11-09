@@ -17,7 +17,7 @@ const httpServer = createServer(app);
 app.use(cors({
   origin:[
     'https://frontend-chi-eight-28.vercel.app',
-    'https://frontend-3g30f0t4c-jayveefortissimos-projects.vercel.app',
+      'https://frontend-chi-eight-28.vercel.app/'     ,
     'https://backend-production-024f.up.railway.app'
   ],
   methods: ["GET","HEAD","PUT","PATCH","POST","DELETE"],
@@ -37,7 +37,7 @@ const io = new Server(httpServer, {
   cors: {
     origin:[
       'https://frontend-chi-eight-28.vercel.app',
-      'https://frontend-3g30f0t4c-jayveefortissimos-projects.vercel.app',
+     'https://frontend-chi-eight-28.vercel.app/',
       'https://backend-production-024f.up.railway.app'
     ],
     methods:['GET', 'POST'],
