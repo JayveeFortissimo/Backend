@@ -72,12 +72,12 @@ app.use((req, res, next) => {
 app.use(routes);
 
 
-/*
+
 app.get('/', (req, res) => {
   console.log("Request received at root endpoint");
   res.json({ message: 'Hello from API!' });
 });
-*/
+
 
 httpServer.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
