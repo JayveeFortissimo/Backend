@@ -11,12 +11,6 @@ const db = mysql.createConnection({
     database:'u120939471_cristobal'
 });
 
-//TRYassdasd
-
-console.log("Host:", process.env.DB_HOST)
-console.log("user:", process.env.DB_USER)
-console.log("password:", process.env.DB_USERPASSWORD)
-console.log("databse:",process.env.DB_DATABASE )
 
 
 db.connect((err) => {
