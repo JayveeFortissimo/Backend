@@ -23,10 +23,17 @@ function allItems(req, res) {
 
   // Fetch all items if userId is null
   if (!userId) {
+
+
     db.query(sqlItems, (err, result) => {
-      if (err) return res.status(500).json({ error: "Internal server error while fetching items" });
-      return processItems(result, null, res);
+      if (err) {
+        console.error("Error fetching items:", err);
+        return res.status(500).json({ error: "Internal server error while fetching items" });
+      }
+      return res.json({ status: 200, data: result });
     });
+
+
   } else {
     // Fetch items based on user sizing
     db.query(sqlItems, (err, result) => {
@@ -138,6 +145,15 @@ function SizeRecomend(req, res) {
     res.json({ data: result[0] }); // Return the user sizing data
   });
 }
+
+
+
+
+//!!!!!!!!!TRYYYYYY TO HANDLE ERRORSSSSSS
+
+
+
+
 
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
