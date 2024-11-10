@@ -109,8 +109,9 @@ async function login(req,res){
        
         const token = jwt.sign({id:data.id,email: data.email}, process.env.ACESSTOKEN, { expiresIn: '5h' });
   
-        return res.status(201).json({ status: 'success', email, token,uersID:data.id,is_Admin:Boolean(data.is_Admin)});
-     
+        setTimeout(()=>{
+            return res.status(201).json({ status: 'success', email, token,uersID:data.id,is_Admin:Boolean(data.is_Admin)});
+        },2000);
       
       });
 
@@ -146,9 +147,8 @@ function logOut(req, res) {
       return res.status(500).json("There was a problem");
     }
 
-    setTimeout(() => {
-      res.status(200).json({ message: "Success Log out" });
-    }, 2000);
+  res.status(200).json({ message: "Success Log out" });
+
   });
 }
 
