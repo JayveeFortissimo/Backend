@@ -66,6 +66,8 @@ function processItems(result, userSizing, res) {
         color: row.color,
         material: row.material
       };
+
+      
     }
 
     if (row.sizes && row.quantity) {
