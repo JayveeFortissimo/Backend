@@ -290,7 +290,8 @@ function SecurityDeposit(req, res) {
 
     function Today(req, res) {
         // Get today's date in "yyyy-mm-dd" format
-        const currentDate = new Date().toISOString().split('T')[0];
+        const singaporeTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' });
+        const currentDate = new Date(singaporeTime).toISOString().split('T')[0];
     
         // SQL query to fetch reservations from approved_items and check_out tables for today
         const sql = `
