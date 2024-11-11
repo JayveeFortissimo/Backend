@@ -36,11 +36,11 @@ function generateOTP() {
               return res.status(400).json({ message: "Account already exists" });
           } else {
               // Insert the new user into the credentials table
-              db.query(sqlInsert, [name, email, address, contact, hashedPassword, adminFlag, generatedReferralCode, OTP], (err, result) => {
+              db.query(sqlInsert, [name, email, address, contact, hashedPassword, adminFlag, generatedReferralCode, OTP], (err, results) => {
                   if (err) return res.status(500).json("Cannot submit");
 
-                  const newUserId = result.insertId;
-
+                  const newUserId = results.insertId;
+                   console.log(newUserId)
                   // If a referral code was used, log it in the referrals table
                   if (referralCodeUsed) {
                       db.query(`SELECT id FROM credentials WHERE referral_code = ?`, [referralCodeUsed], (err, referrerResult) => {
