@@ -3,7 +3,7 @@ import db from '../Model/Database.js';
 function CheckOut(req, res) {
     const Datas = req.body;
 
-    const sql = `INSERT INTO check_out(picture, product_Name, size, start_Date, return_Date, price, quantity, subTotal, user_ID, payment_Method, status, PD, item_id, code) VALUES ?`;
+    const sql = `INSERT INTO check_out(picture, product_Name, size, start_Date, return_Date, price, quantity, subTotal, user_ID, payment_Method, status, PD, item_id, code, Today) VALUES ?`;
     const sql2 = `UPDATE size_table SET quantity = quantity - ? WHERE item_id = ? AND sizes=?`;
     const sql3 = `INSERT INTO adminnotifications(message, dates, user_ID) VALUES (?,?,?)`;
 
@@ -25,7 +25,8 @@ function CheckOut(req, res) {
         pro.status,
         pro.PD,
         pro.item_id,
-        pro.code
+        pro.code,
+        pro.Today
     ]);
 
     // Insert check_out data

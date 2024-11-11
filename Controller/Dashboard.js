@@ -273,7 +273,6 @@ function SecurityDeposit(req, res) {
     }
     
     
-    
     function SecurityProcess(req,res){
    const {code} = req.body;
     const sql = `UPDATE payment SET Security =? WHERE code =?`;
@@ -285,6 +284,17 @@ function SecurityDeposit(req, res) {
    })
 
     }
+
+
+
+    ///RESERVE TO DAY
+
+   function TodayReserved(req,res){
+
+
+
+   }
+
 
 
 export{
