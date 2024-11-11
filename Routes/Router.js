@@ -244,7 +244,7 @@ routes.post('/create-payment-link', async (req, res) => {
               description: description,
               currency:'PHP',
               redirect: {
-                success: 'http://localhost:5173/Profile', // Your success URL
+                success: 'https://frontend-chi-eight-28.vercel.app/profile', // Your success URL
                 failed: 'https://yourwebsite.com/failed',  // Your failed URL
               },
              
