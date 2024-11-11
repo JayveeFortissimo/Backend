@@ -273,12 +273,16 @@ routes.post('/create-payment-link', async (req, res) => {
     try {
       // Handle the webhook event data
       const payload = req.body;
-      console.log('PayMongo webhook payload:', payload);
-  
-      // Example: Update your database or perform actions based on webhook data
-  
-      // Redirect the user back to your website after processing the webhook
-      res.redirect('https://frontend-chi-eight-28.vercel.app/profile'); // Replace with your frontend URL
+    
+
+      if (payload.data.attributes.status === 'paid') {
+        // Redirect the user to the success URL
+        res.redirect('https://frontend-chi-eight-28.vercel.app/payment-success');
+      } else {
+        // Redirect the user to the failed URL
+        res.redirect('https://frontend-chi-eight-28.vercel.app/payment-failed');
+      }
+      
     } catch (error) {
       console.error('PayMongo webhook error:', error);
       res.status(500).json({ error: 'Failed to process webhook.' });
