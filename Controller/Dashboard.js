@@ -288,9 +288,11 @@ function SecurityDeposit(req, res) {
 
     //Reserves Today
 
-    function Today(req,res){
-
-        const currentDate = new Date().toISOString().split('T')[0]; // Get today's date in "yyyy-mm-dd" format
+    function Today(req, res) {
+        // Get today's date in "yyyy-mm-dd" format
+        const currentDate = new Date().toISOString().split('T')[0];
+    
+        // SQL query to fetch reservations from approved_items and check_out tables for today
         const sql = `
             SELECT 
                 a.product_ID AS ItemID, 
@@ -305,8 +307,10 @@ function SecurityDeposit(req, res) {
                 a.Today
             FROM approved_items a
             JOIN credentials c ON a.user_ID = c.id  
-            WHERE a.Today = '${currentDate}'
+            WHERE DATE(a.Today) = '${currentDate}'
+            
             UNION ALL
+            
             SELECT 
                 c.item_id AS ItemID, 
                 c.product_Name, 
@@ -320,37 +324,42 @@ function SecurityDeposit(req, res) {
                 c.Today
             FROM check_out c
             JOIN credentials cc ON c.user_ID = cc.id  
-            WHERE c.Today = '${currentDate}'
+            WHERE DATE(c.Today) = '${currentDate}'
         `;
     
+        // SQL query to fetch counts of approved and check_out items for today
         const countSql = `
             SELECT 
-                (SELECT COUNT(*) FROM approved_items WHERE Today = '${currentDate}') AS approvedCount,
-                (SELECT COUNT(*) FROM check_out WHERE Today = '${currentDate}') AS checkOutCount
+                (SELECT COUNT(*) FROM approved_items WHERE DATE(Today) = '${currentDate}') AS approvedCount,
+                (SELECT COUNT(*) FROM check_out WHERE DATE(Today) = '${currentDate}') AS checkOutCount
         `;
     
+        // Execute the main SQL query to fetch reservations
         db.query(sql, (err, reservationResult) => {
             if (err) {
                 console.error('Error fetching reservation details:', err);
                 return res.status(500).json({ error: "Cannot fetch reservation details" });
             }
     
+            // Execute the count SQL query to fetch counts of reservations
             db.query(countSql, (err, countResult) => {
                 if (err) {
                     console.error('Error fetching reservation count:', err);
                     return res.status(500).json({ error: "Cannot fetch reservation count" });
                 }
     
-                const totalCount = countResult[0].approvedCount + countResult[0].checkOutCount;
+                // Calculate total reservations count
+                const totalCount = (countResult[0]?.approvedCount || 0) + (countResult[0]?.checkOutCount || 0);
     
+                // Return response with total count and reservation details
                 return res.status(200).json({
                     totalReservations: totalCount,
                     reservations: reservationResult
                 });
             });
         });
-
     }
+    
 
 
 export{
