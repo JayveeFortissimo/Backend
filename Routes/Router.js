@@ -259,13 +259,7 @@ routes.post('/create-payment-link', async (req, res) => {
         }
       );
   
-    //  res.json(response.data);
-
-      res.json({
-      paymentLink: response.data,
-      successRedirect: 'https://your-frontend.com/payment-success', // Include the success redirect URL
-      failedRedirect: 'https://your-frontend.com/payment-failed',  // Include the failed redirect URL
-    });
+      res.json(response.data);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Failed to create payment link.' });
