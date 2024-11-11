@@ -244,8 +244,8 @@ routes.post('/create-payment-link', async (req, res) => {
               description: description,
               currency:'PHP',
               redirect: {
-                success: 'https://frontend-chi-eight-28.vercel.app/payment-success', // Your success URL
-                failed: 'https://frontend-chi-eight-28.vercel.app/payment-failed',  // Your failed URL
+                success: 'https://frontend-chi-eight-28.vercel.app/profile', // Your success URL
+                failed: 'https://frontend-chi-eight-28.vercel.app/profile',  // Your failed URL
               },
              
             },
@@ -259,7 +259,14 @@ routes.post('/create-payment-link', async (req, res) => {
         }
       );
   
-      res.json(response.data);
+    //  res.json(response.data);
+
+    res.json({
+      paymentLink: response.data.data.attributes.checkout_url,
+      successRedirect: 'https://your-frontend.com/profile', // Include the success redirect URL
+      failedRedirect: 'https://your-frontend.com/profile',  // Include the failed redirect URL
+    });
+
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Failed to create payment link.' });
@@ -277,10 +284,10 @@ routes.post('/create-payment-link', async (req, res) => {
 
       if (payload.data.attributes.status === 'paid') {
         // Redirect the user to the success URL
-        res.redirect('https://frontend-chi-eight-28.vercel.app/payment-success');
+        res.redirect('https://frontend-chi-eight-28.vercel.app/profile');
       } else {
         // Redirect the user to the failed URL
-        res.redirect('https://frontend-chi-eight-28.vercel.app/payment-failed');
+        res.redirect('https://frontend-chi-eight-28.vercel.app/profile');
       }
       
     } catch (error) {
