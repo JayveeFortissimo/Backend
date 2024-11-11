@@ -286,17 +286,6 @@ function SecurityDeposit(req, res) {
     }
 
 
-
-    ///RESERVE TO DAY
-
-   function TodayReserved(req,res){
-
-
-
-   }
-
-
-
 export{
     TotalItems,
     SecurityDeposit,
