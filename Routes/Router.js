@@ -244,8 +244,8 @@ routes.post('/create-payment-link', async (req, res) => {
               description: description,
               currency:'PHP',
               redirect: {
-                success: 'https://frontend-chi-eight-28.vercel.app/profile', // Your success URL
-                failed: 'https://frontend-chi-eight-28.vercel.app/profile',  // Your failed URL
+                success: 'https://frontend-chi-eight-28.vercel.app/profile/payment-success', // Your success URL
+                failed: 'https://frontend-chi-eight-28.vercel.app/profile/payment-failed',  // Your failed URL
               },
              
             },
