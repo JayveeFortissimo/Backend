@@ -245,7 +245,7 @@ routes.post('/create-payment-link', async (req, res) => {
               currency:'PHP',
               redirect: {
                 success: 'https://frontend-chi-eight-28.vercel.app/profile', // Your success URL
-                failed: 'https://yourwebsite.com/failed',  // Your failed URL
+                failed: 'https://frontend-chi-eight-28.vercel.app/profile',  // Your failed URL
               },
              
             },
@@ -265,6 +265,26 @@ routes.post('/create-payment-link', async (req, res) => {
       res.status(500).json({ error: 'Failed to create payment link.' });
     }
   });
+
+
+
+
+  routes.post('/paymongo-webhook', async (req, res) => {
+    try {
+      // Handle the webhook event data
+      const payload = req.body;
+      console.log('PayMongo webhook payload:', payload);
+  
+      // Example: Update your database or perform actions based on webhook data
+  
+      // Redirect the user back to your website after processing the webhook
+      res.redirect('https://frontend-chi-eight-28.vercel.app/profile'); // Replace with your frontend URL
+    } catch (error) {
+      console.error('PayMongo webhook error:', error);
+      res.status(500).json({ error: 'Failed to process webhook.' });
+    }
+  });
+  
 
 
   // SA mAY SMS
