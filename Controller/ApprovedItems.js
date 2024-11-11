@@ -71,7 +71,7 @@ function DeleteApprovedItems(req,res){
   
         db.query(sql1,[id],(errs,results)=>{
             if(errs) return res.json("Problem DELETEd");
-          req.io.emit('deleteItem',{id})
+             req.io.emit('deleteItem',{id})
 
             return res.status(200).json({message:"Success",deletedItem:id});
            });
