@@ -286,6 +286,73 @@ function SecurityDeposit(req, res) {
     }
 
 
+    //Reserves Today
+
+    function Today(req,res){
+
+        const currentDate = new Date().toISOString().split('T')[0]; // Get today's date in "yyyy-mm-dd" format
+        const sql = `
+            SELECT 
+                a.product_ID AS ItemID, 
+                a.product_Name, 
+                a.user_ID AS CustomerID, 
+                a.start_Date AS StartDate, 
+                a.return_Date AS ExpectedReturnDate, 
+                a.status, 
+                a.quantity,
+                'Approved' AS ReservationType,
+                c.name,
+                a.Today
+            FROM approved_items a
+            JOIN credentials c ON a.user_ID = c.id  
+            WHERE a.Today = '${currentDate}'
+            UNION ALL
+            SELECT 
+                c.item_id AS ItemID, 
+                c.product_Name, 
+                c.user_ID AS CustomerID, 
+                c.start_Date AS StartDate, 
+                c.return_Date AS ExpectedReturnDate, 
+                c.status, 
+                c.quantity,
+                'Checked Out' AS ReservationType,
+                cc.name,
+                c.Today
+            FROM check_out c
+            JOIN credentials cc ON c.user_ID = cc.id  
+            WHERE c.Today = '${currentDate}'
+        `;
+    
+        const countSql = `
+            SELECT 
+                (SELECT COUNT(*) FROM approved_items WHERE Today = '${currentDate}') AS approvedCount,
+                (SELECT COUNT(*) FROM check_out WHERE Today = '${currentDate}') AS checkOutCount
+        `;
+    
+        db.query(sql, (err, reservationResult) => {
+            if (err) {
+                console.error('Error fetching reservation details:', err);
+                return res.status(500).json({ error: "Cannot fetch reservation details" });
+            }
+    
+            db.query(countSql, (err, countResult) => {
+                if (err) {
+                    console.error('Error fetching reservation count:', err);
+                    return res.status(500).json({ error: "Cannot fetch reservation count" });
+                }
+    
+                const totalCount = countResult[0].approvedCount + countResult[0].checkOutCount;
+    
+                return res.status(200).json({
+                    totalReservations: totalCount,
+                    reservations: reservationResult
+                });
+            });
+        });
+
+    }
+
+
 export{
     TotalItems,
     SecurityDeposit,
@@ -296,5 +363,6 @@ export{
     ReservationTrends,
 
     payment_Status,
-    SecurityProcess
+    SecurityProcess,
+    Today
 }

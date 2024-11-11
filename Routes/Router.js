@@ -54,7 +54,9 @@ import {
    TotalCacelled, 
    ReservationTrends,
    payment_Status,
-   SecurityProcess
+   SecurityProcess,
+
+   Today
   } from '../Controller/Dashboard.js';
 
 //To History
@@ -189,6 +191,7 @@ routes.get('/totalIncome',TotalIncome);
 routes.get('/AllCancelled',TotalCacelled);
 routes.get('/AllTrends',ReservationTrends);
 routes.get('/PaymentStatus',payment_Status);
+routes.get('/Today',Today);
 routes.put('/processSecurity',SecurityProcess);
 
 // getAllhistory
