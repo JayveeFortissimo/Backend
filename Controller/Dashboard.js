@@ -351,8 +351,6 @@ function SecurityDeposit(req, res) {
                 // Calculate total reservations count
                 const totalCount = (countResult[0]?.approvedCount || 0) + (countResult[0]?.checkOutCount || 0);
                   
-
-                req.io.emit('Today',{totalReservations: totalCount, reservations: reservationResult})
                 // Return response with total count and reservation details
                 return res.status(200).json({
                     totalReservations: totalCount,
