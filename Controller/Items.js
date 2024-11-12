@@ -444,8 +444,9 @@ const updateItem = (req, res) => {
       const itemToDelete = fetchResult[0];
   
       const deleteItemQuery = `DELETE FROM items WHERE id = ?`;
-     const deletePicks = `DELETE FROM pictures WHERE product_ID =?`
-     const deleteSizes = `DELETE FROM size_table WHERE item_id =?`
+     const deletePicks = `DELETE FROM pictures WHERE product_ID =?`;
+     const deleteSizes = `DELETE FROM size_table WHERE item_id =?`;
+     const deletePictures = `DELETE FROM pictures WHERE product_ID = ?`;
 
       db.query(deleteItemQuery, [id], (deleteErr, deleteResult) => {
         if (deleteErr) return res.status(500).json({ error: "Error deleting item" });
@@ -457,9 +458,14 @@ const updateItem = (req, res) => {
           
         db.query(deleteSizes, [id], (deleteErr, deleteResult) => {
           if (deleteErr) return res.status(500).json({ error: "Error deleting item" });
+
+        db.query(deletePictures, [id], (deleteErr, deleteResult) => {
+          if (deleteErr) return res.status(500).json({ error: "Error deleting item" });
           
           return res.json({ message: "Item deleted successfully", deletedItem: itemToDelete });
           
+        });
+
         });
   
         });
