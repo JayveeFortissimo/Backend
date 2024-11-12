@@ -75,8 +75,6 @@ function CheckOut(req, res) {
 
                         req.io.emit('bellsDash');
 
-                        req.io.emit('Today', {totalReservations: values.length});
-
                         return res.status(201).json("Data Submitted Successfully");
                     });
                 }
