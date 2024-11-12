@@ -261,12 +261,12 @@ function SecurityDeposit(req, res) {
                 const response = {
                     user_ID: userIds,
                     names: names,
-                    totalDownPayment: totals[0].totalDownPayment, // combined IN STORE + Gcash|DownPayment
+                    totalDownPayment: totals[0].totalDownPayment, 
                     totalGcashFullPaid: totals[0].totalGcashFullPaid,
-                    data: result // include all rows with name joined from credentials
+                    data: result 
                 };
     
-                // Send the combined response
+               
                 return res.json(response);
             });
         });
@@ -289,11 +289,10 @@ function SecurityDeposit(req, res) {
     //Reserves Today
 
     function Today(req, res) {
-        // Get today's date in "yyyy-mm-dd" format
+    
         const singaporeTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' });
         const currentDate = new Date(singaporeTime).toISOString().split('T')[0];
     
-        // SQL query to fetch reservations from approved_items and check_out tables for today
         const sql = `
             SELECT 
                 a.product_ID AS ItemID, 
@@ -351,7 +350,9 @@ function SecurityDeposit(req, res) {
     
                 // Calculate total reservations count
                 const totalCount = (countResult[0]?.approvedCount || 0) + (countResult[0]?.checkOutCount || 0);
-    
+                  
+
+                req.io.emit('Today',{totalReservations: totalCount, reservations: reservationResult})
                 // Return response with total count and reservation details
                 return res.status(200).json({
                     totalReservations: totalCount,
