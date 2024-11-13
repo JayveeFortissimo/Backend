@@ -20,10 +20,21 @@ function to_History(req,res){
 
  const sql =  `INSERT INTO history(product_Name,picture,start_Date,return_Date,status,user_ID,penalty,quantity) VALUES (?,?,?,?,?,?,?,?)`;
 
+
+ const message = "YOUR ITEM IS COMPLETED";
+  const date = new Date();
+  const startDate = new Date(date);
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const Starto = startDate.toLocaleDateString('en-US', options);
+
+
 db.query(sql,[product_Name,picture,start_Date,return_Date,status,user_ID,penalty,quantity],(err,result)=>{
   if(err) return res.status(204).json("No content");
 
+  req.io.emit('notification', { message, user_ID, Starto, product_Name });
+
   return res.status(201).json("Data Inserted Successfully");
+  
 });
 
 
