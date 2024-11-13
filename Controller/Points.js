@@ -33,7 +33,7 @@ function RefferalPoints(req, res) {
 function RefreshPoints(req, res) {
   const userID = +req.params.userID;
 
-  const sql = `DELETE FROM refferals WHERE referrer_id = ? LIMIT 5`;
+  const sql = `DELETE FROM refferals WHERE referrer_id = ? LIMIT 10`;
 
   console.log("User ID:", userID);
 
@@ -42,7 +42,7 @@ function RefreshPoints(req, res) {
       return res.json("HAVE A PROBLEM HERE");
     }
 
-    return res.json("SUCCESS: 5 referrals deleted");
+    return res.json("SUCCESS: 10 referrals deleted");
   });
 }
 
