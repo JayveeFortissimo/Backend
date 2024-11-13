@@ -52,17 +52,17 @@ function generateOTP() {
                               // Insert the referral relationship
                               db.query(sqlInsertReferral, [referrerId, newUserId, referralCodeUsed], (err) => {
                                   if (err) console.error("Error logging referral:", err);
-                                  // Still send the response only once
-                                  sendResponse(newUserId, generatedReferralCode);
+                                  // ! ETO YNG BINAGO KO
+                                  sendResponse(newUserId, generatedReferralCode, email);
                               });
                           } else {
-                              // No referrer found, send response
-                              sendResponse(newUserId, generatedReferralCode);
+                              // !ETO DEN
+                              sendResponse(newUserId, generatedReferralCode, email);
                           }
                       });
                   } else {
-                      // No referral code used, send response
-                      sendResponse(newUserId, generatedReferralCode);
+                      // ! ETO DEN
+                      sendResponse(newUserId, generatedReferralCode, email);
                   }
               });
           }
@@ -74,9 +74,13 @@ function generateOTP() {
   }
 
   // Function to send response, ensuring it is only called once
-  function sendResponse(newUserId, generatedReferralCode) {
+  function sendResponse(newUserId, generatedReferralCode, email) {
+     //!Eto yung binago KO
+    const token = jwt.sign({id:newUserId, email:email}, process.env.ACESSTOKEN, { expiresIn: '5h' });
+
       res.status(201).json({
-          id: newUserId,
+        //!Eto den
+          id:{id:newUserId, token},
           message: "User registered successfully",
           referralCode: generatedReferralCode,
       });
