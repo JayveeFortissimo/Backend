@@ -302,6 +302,7 @@ function SecurityDeposit(req, res) {
                 a.return_Date AS ExpectedReturnDate, 
                 a.status, 
                 a.quantity,
+                a.picture,
                 'Approved' AS ReservationType,
                 c.name,
                 a.Today
@@ -319,6 +320,7 @@ function SecurityDeposit(req, res) {
                 c.return_Date AS ExpectedReturnDate, 
                 c.status, 
                 c.quantity,
+                c.picture,
                 'Checked Out' AS ReservationType,
                 cc.name,
                 c.Today
