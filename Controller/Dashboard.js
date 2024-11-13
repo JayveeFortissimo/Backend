@@ -383,12 +383,6 @@ function SecurityDeposit(req, res) {
                     reservations: reservationResult
                 });
 
-
-                console.log("Today event emitted with data:", {
-                    totalReservations: totalCount,
-                    reservations: reservationResult
-                  });
-
                 // Return response with total count and reservation details
                 return res.status(200).json({
                     totalReservations: totalCount,
