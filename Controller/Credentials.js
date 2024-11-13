@@ -15,6 +15,9 @@ function generateOTP() {
   const sqlInsert = `INSERT INTO credentials(name, email, address, contact, password, is_Admin, referral_code, OTP) VALUES (?,?,?,?,?,?,?,?)`;
   const sqlInsertReferral = `INSERT INTO refferals(referrer_id, referred_id, referral_code) VALUES (?,?,?)`;
 
+  const sqlStatus =  `UPDATE credentials SET status =? WHERE email=?`;
+  const status = true;
+
   const { name, email, address, contact, password, is_Admin, referralCodeUsed } = req.body;
    const OTP = generateOTP();
 
@@ -40,7 +43,7 @@ function generateOTP() {
                   if (err) return res.status(500).json("Cannot submit");
 
                   const newUserId = results.insertId;
-                   console.log(newUserId)
+                   
                   // If a referral code was used, log it in the referrals table
                   if (referralCodeUsed) {
                       db.query(`SELECT id FROM credentials WHERE referral_code = ?`, [referralCodeUsed], (err, referrerResult) => {
@@ -65,6 +68,12 @@ function generateOTP() {
                       sendResponse(newUserId, generatedReferralCode, email);
                   }
               });
+
+              //!E2 pa bago QUERY NG ACTIVE
+       db.query(sqlStatus,[status,email],(err,res)=>{
+        if(err) return res.json("Have A Problem Here");
+       })
+
           }
       });
 
