@@ -4,6 +4,7 @@ import routes from './Routes/Router.js';
 import env from 'dotenv';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import bodyParser from 'body-parser';
 
 env.config();
 
@@ -26,6 +27,7 @@ app.use(cors({
 
 
 app.use(express.json());
+app.use(bodyParser.json()); 
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('./uploads'));
 
