@@ -27,6 +27,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static('./uploads'));
 
 
 //SA may front end pala tong mga urls hehehhe
@@ -52,10 +53,6 @@ io.on('connection', (socket) => {
 });
 
 // For accessing images added by admin
-//app.use('/uploads', express.static('./uploads'));
- 
-app.use('/uploads', express.static(path.join(__dirname, './uploads')));
-
 
 app.use((req, res, next) => {
   req.io = io;
