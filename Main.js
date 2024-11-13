@@ -33,6 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 const io = new Server(httpServer, {
   cors: {
     origin:[
+      '*',
       'https://frontend-chi-eight-28.vercel.app',
       'https://backend-production-024f.up.railway.app'
     ],
