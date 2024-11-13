@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
 // For accessing images added by admin
 //app.use('/uploads', express.static('./uploads'));
  
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, './uploads')));
 
 
 app.use((req, res, next) => {
