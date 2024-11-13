@@ -1,7 +1,6 @@
 import db from '../Model/Database.js';
 
 //!NOTSURE PA D2 DAT AFTER APPROVE TSAKA lAG SYA MAG COCOUNT
-
 function TotalofReservation(req, res) {
     const sql = `
         SELECT 
@@ -379,7 +378,7 @@ function SecurityDeposit(req, res) {
                 // Calculate total reservations count
                 const totalCount = (countResult[0]?.approvedCount || 0) + (countResult[0]?.checkOutCount || 0);
                   
-                req.io.emit('Today',{
+                req.io.emit('today',{
                     totalReservations: totalCount,
                     reservations: reservationResult
                 });
