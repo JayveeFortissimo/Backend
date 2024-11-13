@@ -2,7 +2,7 @@ import db from '../Model/Database.js';
 
 
 function to_History(req,res){
-
+   
     const {
         product_Name,
         picture,
@@ -11,15 +11,26 @@ function to_History(req,res){
         status,
         user_ID,
         penalty,
-        quantity
+        quantity,
+        code
     } = req.body;
+
+
+ const updateSql = `UPDATE payment SET payment = payment + ? WHERE code = ?`;
 
  const sql =  `INSERT INTO history(product_Name,picture,start_Date,return_Date,status,user_ID,penalty,quantity) VALUES (?,?,?,?,?,?,?,?)`;
 
 db.query(sql,[product_Name,picture,start_Date,return_Date,status,user_ID,penalty,quantity],(err,result)=>{
   if(err) return res.status(204).json("No content");
+
   return res.status(201).json("Data Inserted Successfully");
 });
+
+
+db.query(updateSql,[penalty, code], (err,result)=>{
+   if(err) res.json("HAVE A PROBLEM HERE");
+});
+
 
 };
 
