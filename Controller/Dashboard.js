@@ -101,7 +101,7 @@ function TotalItems(req, res) {
 function SecurityDeposit(req, res) {
     // SQL to get Name, Security, and Code columns from payment and credentials tables
     const sqlAllData = `
-        SELECT c.name AS Name, p.Security AS Security, p.code AS Code
+        SELECT c.name AS Name, p.Security AS Security, p.code AS Code, p.Datenow AS Datenow
         FROM payment p
         LEFT JOIN credentials c ON p.user_ID = c.id
     `;
