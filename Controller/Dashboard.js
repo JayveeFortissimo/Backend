@@ -53,7 +53,7 @@ function TotalofReservation(req, res) {
 
             const totalCount = countResult[0].approvedCount + countResult[0].checkOutCount;
 
-            io.emit('reservationsUpdated', { totalReservations: totalCount, reservations: reservationResult });
+            req.io.emit('reservationsUpdated', { totalReservations: totalCount, reservations: reservationResult });
 
             return res.status(200).json({
                 totalReservations: totalCount,
@@ -86,7 +86,7 @@ function TotalItems(req, res) {
             if (err) return res.json("Cannot fetch sum of items");
     
         
-            io.emit('TotalItems',{SumAll:result[0], INFO:results});
+            req.io.emit('TotalItems',{SumAll:result[0], INFO:results});
 
             return res.status(200).json({SumAll:result[0], INFO:results});
             
@@ -120,7 +120,7 @@ function SecurityDeposit(req, res) {
             // If there's a result for total sum, use it; otherwise, default to 0
             const totalIncome = totalSumResult[0]?.totalIncome || 0;
 
-      io.emit('SecurityDeposit',{ 
+        req.io.emit('SecurityDeposit',{ 
         result: allDataResult, 
         TotalIncomes: totalIncome, 
         reservations: allDataResult 
@@ -155,7 +155,7 @@ function SecurityDeposit(req, res) {
                     users: usersResult
                 };
 
-                io.emit('TotalUser',response)
+                req.io.emit('TotalUser',response)
     
                 return res.status(200).json(response);
             });
@@ -171,7 +171,7 @@ function SecurityDeposit(req, res) {
             if(err) return res.json("Cannot fetch sum of items");
             const Total = result.reduce((a,b)=> a + parseInt(b.totalIncome),0);
 
-             io.emit('TotalIncome',{AllResult: result, AllTotal: Total});
+            req.io.emit('TotalIncome',{AllResult: result, AllTotal: Total});
 
             return res.status(200).json({AllResult: result, AllTotal: Total});
         });
@@ -191,7 +191,7 @@ function SecurityDeposit(req, res) {
         db.query(sql, (err, result) => {
           if (err) return res.status(500).json("Cannot fetch cancelled items");
           
-          io.emit('TotalCancelled',{
+          req.io.emit('TotalCancelled',{
             totalCancelled: result.length,
             cancelledDetails: result,
           });
@@ -240,7 +240,7 @@ function SecurityDeposit(req, res) {
                 total_count: row.total_count
             }));
 
-            io.emit('ReservationsTred',formattedResults);
+            req.io.emit('ReservationsTred',formattedResults);
     
             // Return the formatted results
             res.status(200).json(formattedResults);
@@ -289,7 +289,7 @@ function SecurityDeposit(req, res) {
                     data: result 
                 };
         
-                io.emit('PaymentStatus',response);
+                req.io.emit('PaymentStatus',response);
                
                 return res.json(response);
             });
@@ -379,11 +379,11 @@ function SecurityDeposit(req, res) {
                 // Calculate total reservations count
                 const totalCount = (countResult[0]?.approvedCount || 0) + (countResult[0]?.checkOutCount || 0);
                   
-                io.emit('Today',{
+                req.io.emit('Today',{
                     totalReservations: totalCount,
                     reservations: reservationResult
                 });
-                
+
                 // Return response with total count and reservation details
                 return res.status(200).json({
                     totalReservations: totalCount,
