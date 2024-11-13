@@ -311,6 +311,23 @@ function SecurityDeposit(req, res) {
     }
 
 
+    
+    function DamageItems(req,res){
+        const {code, date} = req.body;
+         const sql = `UPDATE payment SET Datenow =? WHERE code =?`;
+             
+        db.query(sql,[date,code],(err,result)=>{
+         if(err) return res.json("HAVE A PROBLEM HERE");
+     
+         req.io.emit("securityUpdated", { code, Security: 0 });
+     
+             return res.json("OK")
+        })
+     
+         }
+     
+
+
     //Reserves Today
 
     function Today(req, res) {
@@ -405,5 +422,6 @@ export{
 
     payment_Status,
     SecurityProcess,
-    Today
+    Today,
+    DamageItems
 }

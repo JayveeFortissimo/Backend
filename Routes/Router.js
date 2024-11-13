@@ -56,7 +56,8 @@ import {
    payment_Status,
    SecurityProcess,
 
-   Today
+   Today,
+   DamageItems
   } from '../Controller/Dashboard.js';
 
 //To History
@@ -193,7 +194,7 @@ routes.get('/AllTrends',ReservationTrends);
 routes.get('/PaymentStatus',payment_Status);
 routes.get('/Today',Today);
 routes.put('/processSecurity',SecurityProcess);
-
+routes.put('/DamageItems',DamageItems);
 // getAllhistory
 routes.post('/to_History',to_History);
 routes.delete('/itemsRemoved/:proID',remove);
