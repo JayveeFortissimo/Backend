@@ -12,13 +12,14 @@ function to_History(req,res){
         user_ID,
         penalty,
         quantity,
-        code
+        code,
+        price
     } = req.body;
 
 
  const updateSql = `UPDATE payment SET payment = payment + ? WHERE code = ?`;
 
- const sql =  `INSERT INTO history(product_Name,picture,start_Date,return_Date,status,user_ID,penalty,quantity) VALUES (?,?,?,?,?,?,?,?)`;
+ const sql =  `INSERT INTO history(product_Name,picture,start_Date,return_Date,status,user_ID,penalty,quantity,price) VALUES (?,?,?,?,?,?,?,?,?)`;
  const sql2 = `INSERT INTO user_notification(product_Name, message, user_ID, date) VALUES (?,?,?,?)`;
 
 
@@ -29,7 +30,7 @@ function to_History(req,res){
   const Starto = startDate.toLocaleDateString('en-US', options);
 
 
-db.query(sql,[product_Name,picture,start_Date,return_Date,status,user_ID,penalty,quantity],(err,result)=>{
+db.query(sql,[product_Name,picture,start_Date,return_Date,status,user_ID,penalty,quantity,price],(err,result)=>{
   if(err) return res.status(204).json("No content");
 
   req.io.emit('notification', { message, user_ID, Starto, product_Name });
