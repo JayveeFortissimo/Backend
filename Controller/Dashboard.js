@@ -278,13 +278,14 @@ function SecurityDeposit(req, res) {
     
     function SecurityProcess(req, res) {
         const { code, security } = req.body;
-        
+    
         const sql = `UPDATE payment SET Security = ? WHERE code = ?`;
-        const sql3 = `UPDATE payment SET payment = payment - ? WHERE code = ?`;  // Corrected this query
+        const sql3 = `UPDATE payment SET payment = payment - ? WHERE code = ?`; // Corrected query
     
         // First query to set Security to 0
         db.query(sql, [0, code], (err, result) => {
             if (err) {
+                console.error('Error in setting security:', err);
                 return res.json("HAVE A PROBLEM HERE");
             }
     
@@ -292,8 +293,9 @@ function SecurityDeposit(req, res) {
             req.io.emit("securityUpdated", { code, Security: 0 });
     
             // Second query to update the payment (subtract security from payment)
-            db.query(sql3, [security, code], (err, result) => {
+            db.query(sql3, [Number(security), code], (err, result) => {
                 if (err) {
+                    console.error('Error in updating payment:', err);
                     return res.json("HAVE A PROBLEM HERE");
                 }
                 
