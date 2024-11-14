@@ -203,7 +203,7 @@ function sizes(req,res){
 
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ADDD ITEMSSSSSSSS!!!!!!!!
-/*
+
 const storage = multer.diskStorage({
 
   destination: function(req, file, cb) {
@@ -218,8 +218,7 @@ const storage = multer.diskStorage({
 const uploads = multer({ storage }).array('pictures', 5);
 
 
-*/
-
+/*
 const uploadsDir = path.resolve('uploads');
 
 // Check if the 'uploads' directory exists
@@ -248,7 +247,7 @@ const storage = multer.diskStorage({
 });
 
 const uploads = multer({ storage }).array('pictures', 5);
-
+*/
 
 function adminAddItems(req, res) {
   const { product_Name, price, gender, type, color, material, description, sizes } = req.body;
