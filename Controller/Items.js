@@ -1,6 +1,8 @@
 import db from '../Model/Database.js';
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs';
+
 
 
 function allItems(req, res) {
@@ -202,7 +204,7 @@ function sizes(req,res){
 
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ADDD ITEMSSSSSSSS!!!!!!!!
-
+/*
 const storage = multer.diskStorage({
 
   destination: function(req, file, cb) {
@@ -215,6 +217,39 @@ const storage = multer.diskStorage({
 });
 
 const uploads = multer({ storage }).array('pictures', 5);
+
+
+*/
+
+const uploadsDir = path.resolve('uploads');
+
+// Check if the 'uploads' directory exists
+if (!fs.existsSync(uploadsDir)) {
+  console.log('Creating uploads directory');
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Log folder permissions
+fs.access(uploadsDir, fs.constants.W_OK, (err) => {
+  if (err) {
+    console.error('No write permission for uploads directory');
+  } else {
+    console.log('Uploads directory is writable');
+  }
+});
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, uploadsDir);  // Ensure it's pointing to the correct directory
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + '-' + file.originalname);
+  },
+});
+
+const uploads = multer({ storage }).array('pictures', 5);
+
 
 function adminAddItems(req, res) {
   const { product_Name, price, gender, type, color, material, description, sizes } = req.body;
