@@ -52,8 +52,6 @@ function TotalofReservation(req, res) {
 
             const totalCount = countResult[0].approvedCount + countResult[0].checkOutCount;
 
-            req.io.emit('reservationsUpdated', { totalReservations: totalCount, reservations: reservationResult });
-
             return res.status(200).json({
                 totalReservations: totalCount,
                 reservations: reservationResult
@@ -84,9 +82,6 @@ function TotalItems(req, res) {
         db.query(sqls, (err, results) => {
             if (err) return res.json("Cannot fetch sum of items");
     
-        
-            req.io.emit('TotalItems',{SumAll:result[0], INFO:results});
-
             return res.status(200).json({SumAll:result[0], INFO:results});
             
             
@@ -119,11 +114,6 @@ function SecurityDeposit(req, res) {
             // If there's a result for total sum, use it; otherwise, default to 0
             const totalIncome = totalSumResult[0]?.totalIncome || 0;
 
-        req.io.emit('SecurityDeposit',{ 
-        result: allDataResult, 
-        TotalIncomes: totalIncome, 
-        reservations: allDataResult 
-    })
             return res.status(200).json({ 
                 result: allDataResult, 
                 TotalIncomes: totalIncome, 
@@ -154,7 +144,7 @@ function SecurityDeposit(req, res) {
                     users: usersResult
                 };
 
-                req.io.emit('TotalUser',response)
+             
     
                 return res.status(200).json(response);
             });
@@ -169,8 +159,6 @@ function SecurityDeposit(req, res) {
         db.query(sql,(err,result)=>{
             if(err) return res.json("Cannot fetch sum of items");
             const Total = result.reduce((a,b)=> a + parseInt(b.totalIncome),0);
-
-            req.io.emit('TotalIncome',{AllResult: result, AllTotal: Total});
 
             return res.status(200).json({AllResult: result, AllTotal: Total});
         });
@@ -189,11 +177,6 @@ function SecurityDeposit(req, res) {
         
         db.query(sql, (err, result) => {
           if (err) return res.status(500).json("Cannot fetch cancelled items");
-          
-          req.io.emit('TotalCancelled',{
-            totalCancelled: result.length,
-            cancelledDetails: result,
-          });
 
           return res.status(200).json({
             totalCancelled: result.length,
@@ -239,7 +222,6 @@ function SecurityDeposit(req, res) {
                 total_count: row.total_count
             }));
 
-            req.io.emit('ReservationsTred',formattedResults);
     
             // Return the formatted results
             res.status(200).json(formattedResults);
@@ -288,27 +270,39 @@ function SecurityDeposit(req, res) {
                     data: result 
                 };
         
-                req.io.emit('PaymentStatus',response);
-               
                 return res.json(response);
             });
         });
     }
     
     
-    function SecurityProcess(req,res){
-   const {code} = req.body;
-    const sql = `UPDATE payment SET Security =? WHERE code =?`;
+    function SecurityProcess(req, res) {
+        const { code, security } = req.body;
         
-   db.query(sql,[0,code],(err,result)=>{
-    if(err) return res.json("HAVE A PROBLEM HERE");
-
-    req.io.emit("securityUpdated", { code, Security: 0 });
-
-        return res.json("OK")
-   })
-
+        const sql = `UPDATE payment SET Security = ? WHERE code = ?`;
+        const sql3 = `UPDATE payment SET payment = payment - ? WHERE code = ?`;  // Corrected this query
+    
+        // First query to set Security to 0
+        db.query(sql, [0, code], (err, result) => {
+            if (err) {
+                return res.json("HAVE A PROBLEM HERE");
+            }
+    
+            // Emit the event after the first query is successful
+            req.io.emit("securityUpdated", { code, Security: 0 });
+    
+            // Second query to update the payment (subtract security from payment)
+            db.query(sql3, [security, code], (err, result) => {
+                if (err) {
+                    return res.json("HAVE A PROBLEM HERE");
+                }
+                
+                // Return success response
+                return res.json("OK");
+            });
+        });
     }
+    
 
 
     
@@ -394,11 +388,7 @@ function SecurityDeposit(req, res) {
     
                 // Calculate total reservations count
                 const totalCount = (countResult[0]?.approvedCount || 0) + (countResult[0]?.checkOutCount || 0);
-                  
-                req.io.emit('today',{
-                    totalReservations: totalCount,
-                    reservations: reservationResult
-                });
+            
 
                 // Return response with total count and reservation details
                 return res.status(200).json({
