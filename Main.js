@@ -36,8 +36,8 @@ app.use('/uploads', express.static('./uploads'));
 const io = new Server(httpServer, {
   cors: {
     origin:[
-      'https://frontend-chi-eight-28.vercel.app',
-      'https://backend-production-024f.up.railway.app',
+     // 'https://frontend-chi-eight-28.vercel.app',
+      //'https://backend-production-024f.up.railway.app',
       'http://localhost:5173/'
     ],
     methods:['GET', 'POST'],
