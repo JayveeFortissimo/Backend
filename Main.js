@@ -15,8 +15,8 @@ const httpServer = createServer(app);
 
 app.use(cors({
   origin:[
-    'https://frontend-chi-eight-28.vercel.app',
-    'https://backend-production-024f.up.railway.app',
+    //'https://frontend-chi-eight-28.vercel.app',
+    //'https://backend-production-024f.up.railway.app',
     'http://localhost:5173/'
   ],
   methods: ["GET","HEAD","PUT","PATCH","POST","DELETE"],
