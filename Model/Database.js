@@ -1,9 +1,20 @@
 import env from 'dotenv';
 env.config();
 
-
 import mysql from 'mysql2';
 
+
+
+const db= mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password:'',
+  database: process.env.DB_DATABASE
+})
+
+
+
+/*
 // Create a connection pool
 const db = mysql.createPool({
   host: process.env.DB_HOST,
@@ -23,6 +34,9 @@ db.query('SELECT NOW()', (err, results) => {
   }
   console.log('Current time from DB:', results);
 });
+
+
+*/
 
 
 export default db;
