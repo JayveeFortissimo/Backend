@@ -16,7 +16,7 @@ const httpServer = createServer(app);
 app.use(cors({
   origin:[
     //'https://frontend-chi-eight-28.vercel.app',
-    'http://localhost:8000/',
+    'http://localhost:8000',
     'http://localhost:5173/'
   ],
   methods: ["GET","HEAD","PUT","PATCH","POST","DELETE"],
@@ -37,7 +37,7 @@ const io = new Server(httpServer, {
   cors: {
     origin:[
      // 'https://frontend-chi-eight-28.vercel.app',
-      //'http://localhost:8000/',
+      //'http://localhost:8000',
       'http://localhost:5173/'
     ],
     methods:['GET', 'POST'],
