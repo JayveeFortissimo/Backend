@@ -16,10 +16,10 @@ import {
                       sizes,
                         updateItem,
                         getItemByID,
-                              SizeRecomend,
-                              AddCategorys,
-                              getAllCategorys,
-                              addColors,
+                                  SizeRecomend,
+                                              AddCategorys,
+                                              getAllCategorys,
+                                  addColors,
                     addMaterials,
                     getAllColors,
                     getAllMaterials,
@@ -53,7 +53,6 @@ import {
    TotalIncome, 
    TotalCacelled, 
    ReservationTrends,
-   payment_Status,
    SecurityProcess,
 
    Today,
@@ -79,7 +78,6 @@ import { userNotif, Admin_Notifications } from "../Controller/Notification.js";
 
 import { RefferalPoints, RefreshPoints } from '../Controller/Points.js';
 
-
 import {adminProfile} from '../Controller/AdminProfile.js';
 
 //!!!!!!!!!ROUTESSSSSSSSSSSSSSSSSSSSSSS
@@ -87,8 +85,6 @@ const routes = express.Router();
 
 
 routes.get('/AdminProfile/:adminID',adminProfile);
-
-
 
 //POINSTS
 routes.get('/allRefferer/:referrerId',RefferalPoints);
@@ -184,6 +180,7 @@ routes.delete('/itemdelete/:itemD', Delete_Items);
 routes.post('/edit_Status/:items_IDS',ChangeStatus);
 
 //Dashboard of admin  
+
 routes.get('/numberOfItems',TotalItems);
 routes.get('/numbersOfPending', SecurityDeposit);
 routes.get('/totalReserves',TotalofReservation);
@@ -191,10 +188,12 @@ routes.get('/totalUsers',TotalUser);
 routes.get('/totalIncome',TotalIncome);
 routes.get('/AllCancelled',TotalCacelled);
 routes.get('/AllTrends',ReservationTrends);
-routes.get('/PaymentStatus',payment_Status);
 routes.get('/Today',Today);
 routes.put('/processSecurity',SecurityProcess);
 routes.put('/DamageItems',DamageItems);
+
+
+
 // getAllhistory
 routes.post('/to_History',to_History);
 routes.delete('/itemsRemoved/:proID',remove);
@@ -204,6 +203,7 @@ routes.get('/AllHistory/:user_ID',getAllhistory);
 routes.post('/ItemsApproved',ApprovedItems);
 routes.get('/ApprovedItems/:userD',getAllApproved);
 routes.delete('/removeIncheck/:procheckID',DeleteApprovedItems);
+
 //!WAIT HERE 
 routes.put('/itemPickuped/:prodID', pickuped);
 routes.delete('/removeGrace/:idApprove',gracePeriod);
@@ -228,68 +228,6 @@ routes.get('/appoinmentID/:userIDs',getAppointment);
 
 routes.get('/allAppointments',getAllAppointments);
 routes.put('/APPOINTMENTSTATUS/:userID', EditStatus1);
-
-//For Online Shop
-routes.post('/create-payment-link', async (req, res) => {
-
-    try {
-      const { amount, description } = req.body;
-  
-      // PayMongo API request to create a payment link
-      const response = await axios.post(
-        'https://api.paymongo.com/v1/links',
-        {
-          data: {
-            attributes: {
-              amount: amount,
-              description: description,
-              currency:'PHP',
-              redirect: {
-                success: 'https://frontend-chi-eight-28.vercel.app/profile', // Your success URL
-                failed: 'https://frontend-chi-eight-28.vercel.app/profile',  // Your failed URL
-              },
-             
-            },
-          },
-        },
-        {
-          headers: {
-            Authorization: `Basic ${Buffer.from(`${process.env.PAYMONGO_SECRET_KEY}:`).toString('base64')}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-  
-      res.json(response.data);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to create payment link.' });
-    }
-  });
-
-
-
-
-  routes.post('/paymongo-webhook', async (req, res) => {
-    try {
-      // Handle the webhook event data
-      const payload = req.body;
-    
-
-      if (payload.data.attributes.status === 'paid') {
-        // Redirect the user to the success URL
-        res.redirect('https://frontend-chi-eight-28.vercel.app/profile');
-      } else {
-        // Redirect the user to the failed URL
-        res.redirect('https://frontend-chi-eight-28.vercel.app/profile');
-      }
-      
-    } catch (error) {
-      console.error('PayMongo webhook error:', error);
-      res.status(500).json({ error: 'Failed to process webhook.' });
-    }
-  });
-  
 
 
   // SA mAY SMS
@@ -328,6 +266,7 @@ routes.post('/create-payment-link', async (req, res) => {
     }
 });
 
+
 //SPREAD SHEETS
 
 
@@ -335,20 +274,17 @@ routes.get('/proxy-image/:id', async (req, res) => {
   const imageId = req.params.id;
 
   try {
-    // Google Drive link for the image using the file ID
+  
     const imageUrl = `https://drive.google.com/uc?id=${imageId}`;
 
-    // Fetch the image from Google Drive
     const response = await axios({
       url: imageUrl,
       method: 'GET',
-      responseType: 'stream', // Handle binary data
+      responseType: 'stream',
     });
 
-    // Set the correct content type for image
-    res.setHeader('Content-Type', 'image/jpeg'); // Adjust to image format (e.g., PNG, JPEG)
+    res.setHeader('Content-Type', 'image/jpeg'); 
 
-    // Pipe the image data to the client
     response.data.pipe(res);
   } catch (error) {
     console.error('Error fetching image:', error.message);

@@ -55,6 +55,8 @@ function ForgotPassword(req, res) {
 
     const sql = `SELECT OTP FROM credentials WHERE email = ?`;
 
+    console.log(email);
+
     db.query(sql, [email], (err, result) => {
         if (err)  return res.json("HAVE A PROBLEM HERE");
     
@@ -73,7 +75,6 @@ function ForgotPassword(req, res) {
                     pass: process.env.PASSWORD
                 }
             });
-    
          
                 const mail = {
                     to: email,
@@ -93,8 +94,7 @@ function ForgotPassword(req, res) {
                     return res.json("Message successfully sent");
                 });
 
-        }
-      
+        }    
        
     });
 }

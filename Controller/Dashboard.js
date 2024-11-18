@@ -239,52 +239,6 @@ function SecurityDeposit(req, res) {
     }
 
 
-
-
-    function payment_Status(req, res) {
-        // Main query to retrieve approved items and join with credentials to get user details
-        const sql = `
-            SELECT approved_items.*, 
-                   credentials.name 
-            FROM approved_items
-            LEFT JOIN credentials ON approved_items.user_ID = credentials.id
-            WHERE approved_items.PD IN ('IN STORE', 'Gcash|DownPayment', 'Gcash|FullPaid')
-        `;
-    
-        // Query to get total counts with combined down payment
-        const totalSql = `
-            SELECT 
-                SUM(CASE WHEN PD IN ('IN STORE', 'Gcash|DownPayment') THEN 1 ELSE 0 END) AS totalDownPayment,
-                SUM(CASE WHEN PD = 'Gcash|FullPaid' THEN 1 ELSE 0 END) AS totalGcashFullPaid
-            FROM approved_items
-        `;
-    
-        // Run both queries
-        db.query(sql, (err, result) => {
-            if (err) return res.json({ error: "HAVE A PROBLEM HERE" });
-    
-            // Run second query to get the totals
-            db.query(totalSql, (err, totals) => {
-                if (err) return res.json({ error: "HAVE A PROBLEM HERE" });
-    
-                // Extract unique user IDs and names
-                const userIds = [...new Set(result.map(row => row.user_ID))];
-                const names = [...new Set(result.map(row => row.name))];
-    
-                // Combine results in the desired format
-                const response = {
-                    user_ID: userIds,
-                    names: names,
-                    totalDownPayment: totals[0].totalDownPayment, 
-                    totalGcashFullPaid: totals[0].totalGcashFullPaid,
-                    data: result 
-                };
-        
-                return res.json(response);
-            });
-        });
-    }
-    
     
     function SecurityProcess(req, res) {
         const { code, security } = req.body;
@@ -422,7 +376,6 @@ export{
     TotalCacelled,
     ReservationTrends,
 
-    payment_Status,
     SecurityProcess,
     Today,
     DamageItems

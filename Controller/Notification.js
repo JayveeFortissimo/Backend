@@ -1,7 +1,5 @@
 import db from '../Model/Database.js';
 
-
-
 function userNotif(req,res){
     const id = +req.params.notif
     const sql = `SELECT * FROM user_notification WHERE user_ID =?`;
