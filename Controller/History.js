@@ -16,11 +16,40 @@ function to_History(req,res){
         price
     } = req.body;
 
+    console.log( 
+      product_Name,
+      picture,
+      start_Date,
+      return_Date,
+      status,
+      user_ID,
+      penalty,
+      quantity,
+      code,
+      price
+    )
+
 
  const updateSql = `UPDATE payment SET payment = payment + ? WHERE code = ?`;
 
- const sql =  `INSERT INTO history(product_Name,picture,start_Date,return_Date,status,user_ID,penalty,quantity,price) VALUES (?,?,?,?,?,?,?,?,?)`;
- const sql2 = `INSERT INTO user_notification(product_Name, message, user_ID, date) VALUES (?,?,?,?)`;
+ const sql =  `INSERT INTO history(
+                            product_Name,
+                             picture,
+                             start_Date,
+                             return_Date,
+                             status,
+                             user_ID,
+                             penalty,
+                             quantity,
+                              price
+                              ) VALUES (?,?,?,?,?,?,?,?,?)`;
+
+ const sql2 = `INSERT INTO user_notification(
+                                            product_Name,
+                                            message,
+                                            user_ID,
+                                            date
+                                            ) VALUES (?,?,?,?)`;
 
 
  const message = "YOUR ITEM IS COMPLETED";
@@ -36,20 +65,18 @@ db.query(sql,[product_Name,picture,start_Date,return_Date,status,user_ID,penalty
   req.io.emit('notification', { message, user_ID, Starto, product_Name });
 
   db.query(sql2, [product_Name, message, user_ID, Starto], (error, result) => {
-    if (error) {
-        return res.json({ error: "HAVE A PROBLEM HERE" });
-    }
-    // Only send the final response once all operations succeed
-    return res.json({ success: "Item approved and notification sent!" });
+    if (error) return res.json({ error: "HAVE A PROBLEM HERE" });
+    
+    db.query(updateSql,[penalty, code], (err,result)=>{
+      if(err) res.json("HAVE A PROBLEM HERE");
+        return res.json({ success: "Item approved and notification sent!" });
+    });
+
 });
 
 
 });
 
-//WAIT HERE
-db.query(updateSql,[penalty, code], (err,result)=>{
-   if(err) res.json("HAVE A PROBLEM HERE");
-});
 
 
 };
