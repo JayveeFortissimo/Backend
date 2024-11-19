@@ -81,6 +81,7 @@ function CheckOut(req, res) {
 
 
 
+
 //Lahat ng orders ilalagay sa profile
 function allOrders(req,res){
     const id = +req.params.orders_ID;
@@ -88,10 +89,10 @@ function allOrders(req,res){
 
     db.query(sql,[id],(error,result)=>{
         if(error) return res.status(400).json("Items not Found");
+        console.log(result);
         return res.json({status:200,result:result})
     });
 }
-
 
 
 ///THIS IS FOR ADMINNNNN FOR CHANGE APPROVAL
@@ -111,8 +112,24 @@ function ChangeStatus(req,res){
 }
 
 
+function Payments(req,res){
+
+    const {DATENOW, payment, Security,  Type, user_ID, code} = req.body;
+    const datas = [DATENOW,payment, Security, Type, user_ID, code];
+    const sql = `INSERT INTO payment(Datenow,payment,  Security, Type, user_ID, code) VALUES (?,?,?,?,?,?)`;
+ 
+ db.query(sql,datas,(err,result)=>{
+    if(err) return res.json("Have A Problem HERE");
+    return res.json("SUCCESS");
+ });
+    
+  }
+ 
+
+
 export{
     CheckOut,
     allOrders,
-    ChangeStatus
+    ChangeStatus,
+    Payments
 }

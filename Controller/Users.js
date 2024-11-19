@@ -37,10 +37,27 @@ function usersAdbyID(req,res){
 };
 
 
+function adminProfile(req,res){
+
+    const id = +req.params.adminID;
+    
+    const sql = `SELECT * FROM credentials WHERE id=?`;
+    
+    db.query(sql,[id],(error,ressult)=>{
+    if(error) return res.json("HAVE A PROBLEM HERE");
+    
+    return res.json(ressult);
+    
+    });
+    
+    }
+    
+
 
 
 export{
     usersById,
     allUsers,
-    usersAdbyID
+    usersAdbyID,
+    adminProfile
 }

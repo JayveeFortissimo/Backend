@@ -1,7 +1,7 @@
 import db from '../Model/Database.js';
 
 function ApprovedItems(req, res) {
-  const sql = `INSERT INTO approved_items(product_Name, start_Date, return_Date, status, user_ID, picture, returned, payment_Method, PD, product_ID, Pickuped, quantity, size, subTotal, code, Today,price) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+  const sql = `INSERT INTO approved_items(product_Name, start_Date, return_Date, status, user_ID, picture, returned, product_ID, Pickuped, quantity, size, subTotal, code, Today,price) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
   const sql2 = `INSERT INTO user_notification(product_Name, message, user_ID, date) VALUES (?,?,?,?)`;
 
   const {
@@ -12,8 +12,6 @@ function ApprovedItems(req, res) {
       user_ID,
       picture,
       returned,
-      payment_Method,
-      PD,
       product_ID,
       statusPickuped,
       quantity,
@@ -30,7 +28,7 @@ function ApprovedItems(req, res) {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   const Starto = startDate.toLocaleDateString('en-US', options);
 
-  db.query(sql, [product_Name, start_Date, return_Date, status, user_ID, picture, returned, payment_Method, PD, product_ID, statusPickuped, quantity, size, subTotal , code, Today, price], (err, result) => {
+  db.query(sql, [product_Name, start_Date, return_Date, status, user_ID, picture, returned, product_ID, statusPickuped, quantity, size, subTotal , code, Today, price], (err, result) => {
       if (err) {
           return res.json({ error: "Cannot push, have a problem" });
       }
@@ -45,8 +43,6 @@ function ApprovedItems(req, res) {
           user_ID,
           picture,
           returned,
-          payment_Method,
-          PD
       });
       
       req.io.emit('notification', { message, user_ID, Starto, product_Name });

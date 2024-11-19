@@ -17,7 +17,6 @@ app.use(cors({
     //'https://frontend-chi-eight-28.vercel.app',
     'http://localhost:8000',
     'http://localhost:5173',
-    '*'
   ],
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   credentials: true,
@@ -36,7 +35,6 @@ const io = new Server(httpServer, {
       // 'https://frontend-chi-eight-28.vercel.app',
       'http://localhost:8000',
       'http://localhost:5173',
-      '*'
     ],
     methods: ['GET', 'POST'],
     credentials: true
