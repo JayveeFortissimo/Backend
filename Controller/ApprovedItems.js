@@ -33,7 +33,6 @@ function ApprovedItems(req, res) {
           return res.json({ error: "Cannot push, have a problem" });
       }
 
-      // Emit the event after all queries succeed
       req.io.emit('newProduct', {
           id: product_ID,
           product_Name,
@@ -47,13 +46,10 @@ function ApprovedItems(req, res) {
       
       req.io.emit('notification', { message, user_ID, Starto, product_Name });
 
-
-      // Now we can safely run the second query
       db.query(sql2, [product_Name, message, user_ID, Starto], (error, result) => {
           if (error) {
               return res.json({ error: "HAVE A PROBLEM HERE" });
           }
-          // Only send the final response once all operations succeed
           return res.json({ success: "Item approved and notification sent!" });
       });
   });
@@ -63,7 +59,7 @@ function ApprovedItems(req, res) {
 
 function DeleteApprovedItems(req,res){
     const id = +req.params.procheckID;
-
+    
     const sql1 = `DELETE FROM check_out WHERE id =?`;
   
         db.query(sql1,[id],(errs,results)=>{
@@ -89,25 +85,17 @@ db.query(sql,[id],(err,result)=>{
 };
 
 
-//! is pickuped by admin
-
 function pickuped(req,res){
 
     const id = +req.params.prodID;
    const { Pickuped, total, code } = req.body;
 
     const sql = `UPDATE approved_items SET Pickuped=? WHERE id=?`;
-    const sql1 = `UPDATE payment SET payment =? WHERE code =?`;
     
     db.query(sql,[Pickuped , id],(err, result)=>{
     if(err) return res.json("HAVE A PROBLEM HERE");
 
     req.io.emit('pickup-status-updated', { prodID: id, Pickuped });
-
-    db.query(sql1,[total, code],(error,result)=>{
-        if(err) res.jsoon("Have A Problem");
-        return res.json("Succcess");
-    })
 
     });
 

@@ -108,35 +108,7 @@ function GetAllCancelled(req,res){
 }
 
 
-
-//!ETO SA ADMIN REFUNDDDD
-
-function EditStatus(req,res){
-    const id = +req.params.prodID;
-
-    const {status, code, TotalEdit } = req.body;
-    const security = 0;
-    const sql = `UPDATE cancelled SET status =? WHERE id=?`;
-    const sql2 = `UPDATE payment SET payment =?, Security =? WHERE code =?`
-
-    db.query(sql,[status, id],(err,result)=>{
-        if(err) return res.status(500).json("Server Error");
- 
-    db.query(sql2,[TotalEdit, security, code],(err,result)=>{
-        if(err) return res.status(500).json("Server Error");
-        
-        req.io.emit('statusUpdated', { id, status, code, TotalEdit });
-        
-        return res.json({message:"Success"})
-    })
-
-    })
-
-}
-
-
 export {
     CancelledItems,
     GetAllCancelled,
-    EditStatus
 };
