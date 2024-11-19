@@ -1,7 +1,7 @@
 import express,{ Router } from "express";
 
 
-import { ApprovedItems, DeleteApprovedItems, getAllApproved, pickuped, gracePeriod} from '../Controller/ApprovedItems.js';
+import { ApprovedItems, DeleteApprovedItems, getAllApproved, pickuped} from '../Controller/ApprovedItems.js';
 
 
 const AllAprrovedItems = express.Router();
@@ -15,8 +15,6 @@ AllAprrovedItems.delete('/removeIncheck/:procheckID',DeleteApprovedItems);
 
 //!WAIT HERE 
 AllAprrovedItems.put('/itemPickuped/:prodID', pickuped);
-AllAprrovedItems.delete('/removeGrace/:idApprove',gracePeriod);
-
 
 
 export default AllAprrovedItems;

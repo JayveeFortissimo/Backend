@@ -115,48 +115,9 @@ function pickuped(req,res){
 
 
 
-//! SAMAY GRACE PERIOD TO AUTOMATIC NA MAG CACANCELL
-function gracePeriod(req,res){
-    //!WAIT PA HERE BAKA MAGKA ERROR
-const {user_ID} = req.body;
-
-const id = +req.params.idApprove;
-const sql = `DELETE FROM approved_items WHERE id =?`;
-const sql2 = `INSERT INTO user_notification(product_Name, message, user_ID, date) VALUES (?,?,?,?)`;
-
-const message = "YOUR ITEM IS APPROVED";
-  const date = new Date();
-  const startDate = new Date(date);
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  const Starto = startDate.toLocaleDateString('en-US', options);
-  const mes = "DELETED"
-
-db.query(sql,[id], (err,result)=>{
-  if(err) return res.json("CANNOT DELETED AFTER GRACE PERIOD");
-
-
-  db.query(sql2, ["ITEMS ON YOUR APPROVED", message, user_ID, Starto], (error, result) => {
-    if (error) {
-        return res.json({ error: "HAVE A PROBLEM HERE" });
-    }
-    // Only send the final response once all operations succeed
-    req.io.emit('notification', { message, user_ID, Starto, mes});
-
-    return res.json({ success: "Item approved and notification sent!" });
-});
-
- 
-
-});
-
-}
-
-
-
 export{
     ApprovedItems,
     DeleteApprovedItems,
     getAllApproved,
-    pickuped,
-    gracePeriod
+    pickuped
 }
