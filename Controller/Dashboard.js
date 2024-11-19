@@ -92,43 +92,6 @@ function TotalItems(req, res) {
 };
 
 
-function SecurityDeposit(req, res) {
-    // SQL to get Name, Security, and Code columns from payment and credentials tables
-    const sqlAllData = `
-        SELECT c.name AS Name, p.Security AS Security, p.code AS Code, p.Datenow AS Datenow
-        FROM payment p
-        LEFT JOIN credentials c ON p.user_ID = c.id
-    `;
-    
-    // SQL to calculate the total sum of the Security column in payment
-    const sqlTotalSum = `SELECT SUM(Security) AS totalIncome FROM payment`;
-
-    db.query(sqlAllData, (err, allDataResult) => {
-        if (err) return res.json("Cannot fetch payment data");
-
-        // Query for the total sum of Security column
-        db.query(sqlTotalSum, (err, totalSumResult) => {
-            if (err) return res.json("Cannot fetch sum of Security");
-
-            // If there's a result for total sum, use it; otherwise, default to 0
-            const totalIncome = totalSumResult[0]?.totalIncome || 0;
-
-            req.io.emit('SecurityDeposit',{ 
-                result: allDataResult, 
-                TotalIncomes: totalIncome, 
-                reservations: allDataResult 
-            })
-
-            return res.status(200).json({ 
-                result: allDataResult, 
-                TotalIncomes: totalIncome, 
-                reservations: allDataResult 
-            });
-        });
-    });
-}
-
-
 
 
     function TotalUser(req, res) {
@@ -224,41 +187,8 @@ function SecurityDeposit(req, res) {
             res.status(200).json(formattedResults);
         });
     }
-
-
-    
-    function SecurityProcess(req, res) {
-        const { code, security } = req.body;
-    
-        const sql = `UPDATE payment SET Security = ? WHERE code = ?`;
-        const sql3 = `UPDATE payment SET payment = payment - ? WHERE code = ?`; // Corrected query
-    
-        // First query to set Security to 0
-        db.query(sql, [0, code], (err, result) => {
-            if (err) {
-                console.error('Error in setting security:', err);
-                return res.json("HAVE A PROBLEM HERE");
-            }
-    
-            // Emit the event after the first query is successful
-            req.io.emit("securityUpdated", { code, Security: 0 });
-    
-            // Second query to update the payment (subtract security from payment)
-            db.query(sql3, [Number(security), code], (err, result) => {
-                if (err) {
-                    console.error('Error in updating payment:', err);
-                    return res.json("HAVE A PROBLEM HERE");
-                }
-                
-                // Return success response
-                return res.json("OK");
-            });
-        });
-    }
     
 
-
-    
     function DamageItems(req,res){
         const {code, date} = req.body;
          const sql = `UPDATE payment SET Datenow =? WHERE code =?`;
@@ -356,13 +286,11 @@ function SecurityDeposit(req, res) {
 
 export{
     TotalItems,
-    SecurityDeposit,
     TotalofReservation,
     TotalUser,
     TotalCacelled,
     ReservationTrends,
 
-    SecurityProcess,
     Today,
     DamageItems
 }
