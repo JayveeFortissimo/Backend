@@ -6,7 +6,6 @@ import {
     SecurityDeposit,
      TotalofReservation, 
      TotalUser,
-     TotalIncome, 
      TotalCacelled, 
      ReservationTrends,
      SecurityProcess,
@@ -24,7 +23,6 @@ DashboardAdmin.get('/numberOfItems',TotalItems);
 DashboardAdmin.get('/numbersOfPending', SecurityDeposit);
 DashboardAdmin.get('/totalReserves',TotalofReservation);
 DashboardAdmin.get('/totalUsers',TotalUser);
-DashboardAdmin.get('/totalIncome',TotalIncome);
 DashboardAdmin.get('/AllCancelled',TotalCacelled);
 DashboardAdmin.get('/AllTrends',ReservationTrends);
 DashboardAdmin.get('/Today',Today);

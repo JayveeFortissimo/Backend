@@ -1,6 +1,5 @@
 import db from '../Model/Database.js';
 
-
 function to_History(req,res){
    
     const {
@@ -15,19 +14,6 @@ function to_History(req,res){
         code,
         price
     } = req.body;
-
-    console.log( 
-      product_Name,
-      picture,
-      start_Date,
-      return_Date,
-      status,
-      user_ID,
-      penalty,
-      quantity,
-      code,
-      price
-    )
 
 
  const updateSql = `UPDATE payment SET payment = payment + ? WHERE code = ?`;

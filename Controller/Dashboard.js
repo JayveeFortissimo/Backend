@@ -157,19 +157,6 @@ function SecurityDeposit(req, res) {
     }
     
 
-    function TotalIncome(req,res){
-
-        const sql = `SELECT Datenow AS month, SUM(payment) AS totalIncome FROM payment GROUP BY Month`;
-        
-        db.query(sql,(err,result)=>{
-            if(err) return res.json("Cannot fetch sum of items");
-            const Total = result.reduce((a,b)=> a + parseInt(b.totalIncome),0);
-
-            return res.status(200).json({AllResult: result, AllTotal: Total});
-        });
-    }
-
-
 
     function  TotalCacelled(req, res) {
         // Fetch details from both the 'cancelled' table and the 'credentials' table using a join
@@ -372,7 +359,6 @@ export{
     SecurityDeposit,
     TotalofReservation,
     TotalUser,
-    TotalIncome,
     TotalCacelled,
     ReservationTrends,
 
