@@ -79,21 +79,25 @@ db.query(sql,[id],(err,result)=>{
 };
 
 
-function pickuped(req,res){
-
+function pickuped(req, res) {
     const id = +req.params.prodID;
-   const { Pickuped, total, code } = req.body;
-
+    const { Pickuped } = req.body;
+  console.log(id)
+  console.log(Pickuped)
     const sql = `UPDATE check_out SET Pickuped=? WHERE id=?`;
-    
-    db.query(sql,[Pickuped , id],(err, result)=>{
-    if(err) return res.json("HAVE A PROBLEM HERE");
 
-    req.io.emit('pickup-status-updated', { prodID: id, Pickuped });
+    db.query(sql, [Pickuped, id], (err, result) => {
+        if (err) {
+            console.error("Database error:", err);
+            return res.status(500).json({ message: "HAVE A PROBLEM HERE" });
+        }
 
+        req.io.emit('pickup-status-updated', { prodID: id, Pickuped });
+        
+        // Send success response
+        res.status(200).json({ message: "Pickup status updated successfully" });
     });
-
-};
+}
 
 
 

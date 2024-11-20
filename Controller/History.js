@@ -1,85 +1,65 @@
 import db from '../Model/Database.js';
 
-function to_History(req,res){
-   
-    const {
-        product_Name,
-        picture,
-        start_Date,
-        return_Date,
-        status,
-        user_ID,
-        penalty,
-        quantity,
-        code,
-        price
-    } = req.body;
+function to_History(req, res) {
+  const {
+      product_Name,
+      picture,
+      start_Date,
+      return_Date,
+      status,
+      user_ID,
+      penalty,
+      quantity,
+      code,
+      price,
+  } = req.body;
 
 
- const updateSql = `UPDATE payment SET payment = payment + ? WHERE code = ?`;
+  const sql = `INSERT INTO history(
+      product_Name, picture, start_Date, return_Date, status, user_ID, penalty, quantity, price
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  const sql2 = `INSERT INTO user_notification(
+      product_Name, message, user_ID, date
+  ) VALUES (?, ?, ?, ?)`;
 
- const sql =  `INSERT INTO history(
-                            product_Name,
-                             picture,
-                             start_Date,
-                             return_Date,
-                             status,
-                             user_ID,
-                             penalty,
-                             quantity,
-                              price
-                              ) VALUES (?,?,?,?,?,?,?,?,?)`;
-
- const sql2 = `INSERT INTO user_notification(
-                                            product_Name,
-                                            message,
-                                            user_ID,
-                                            date
-                                            ) VALUES (?,?,?,?)`;
-
-
- const message = "YOUR ITEM IS COMPLETED";
+  const message = "YOUR ITEM IS COMPLETED";
   const date = new Date();
-  const startDate = new Date(date);
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  const Starto = startDate.toLocaleDateString('en-US', options);
+  const Starto = date.toLocaleDateString('en-US', options);
 
+  db.query(sql, [product_Name, picture, start_Date, return_Date, status, user_ID, penalty, quantity, price], (err, result) => {
+      if (err) {
+          return res.status(500).json({ error: "Error inserting into history" });
+      }
 
-db.query(sql,[product_Name,picture,start_Date,return_Date,status,user_ID,penalty,quantity,price],(err,result)=>{
-  if(err) return res.status(204).json("No content");
+      req.io.emit('notification', { message, user_ID, Starto, product_Name });
 
-  req.io.emit('notification', { message, user_ID, Starto, product_Name });
+      db.query(sql2, [product_Name, message, user_ID, Starto], (error, result) => {
+          if (error) {
+              return res.status(500).json({ error: "Error inserting into notifications" });
+          }
 
-  db.query(sql2, [product_Name, message, user_ID, Starto], (error, result) => {
-    if (error) return res.json({ error: "HAVE A PROBLEM HERE" });
-    
-    db.query(updateSql,[penalty, code], (err,result)=>{
-      if(err) res.json("HAVE A PROBLEM HERE");
-        return res.json({ success: "Item approved and notification sent!" });
-    });
-
-});
-
-
-});
-
-
-
-};
-
-
-function remove(req,res){
-  const pro_ID = +req.params.proID;
-  const sql = `DELETE FROM approved_items WHERE id=?`;
-
-  db.query(sql,[pro_ID],(err,result)=>{
-    if(err) return res.json("Have A Problems");
-    
-    req.io.emit('itemRemoved', pro_ID);
-    return res.status(200).json("OK");
+              return res.json({ success: "Item approved and notification sent!" });
+       
+      });
   });
+}
 
-};
+
+function remove(req, res) {
+  const pro_ID = +req.params.proID;
+  const sql = `DELETE FROM check_out WHERE id = ?`;
+
+  db.query(sql, [pro_ID], (err, result) => {
+      if (err) {
+          return res.status(500).json({ error: "Error removing item" });
+      }
+
+      req.io.emit('itemRemoved', pro_ID);
+      return res.status(200).json({ success: "Item removed successfully" });
+  });
+}
+
 
 
 function getAllhistory(req,res){
