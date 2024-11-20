@@ -40,6 +40,8 @@ function ApprovedItems(req, res) {
       
       req.io.emit('notification', { message, user_ID, Starto, product_Name });
 
+      req.io.emit('EditStatus',{product_ID, status})
+
       db.query(sql2, [product_Name, message, user_ID, Starto], (error, result) => {
           if (error) {
               return res.json({ error: "HAVE A PROBLEM HERE" });
