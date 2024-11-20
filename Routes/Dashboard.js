@@ -17,7 +17,6 @@ const DashboardAdmin  = express.Router();
 //Dashboard of admin  
 
 DashboardAdmin.get('/numberOfItems',TotalItems);
-
 DashboardAdmin.get('/totalReserves',TotalofReservation);
 DashboardAdmin.get('/totalUsers',TotalUser);
 DashboardAdmin.get('/AllCancelled',TotalCacelled);

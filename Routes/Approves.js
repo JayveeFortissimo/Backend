@@ -9,7 +9,7 @@ const AllAprrovedItems = express.Router();
 
 
 //sa may Approve e2 
-AllAprrovedItems.post('/ItemsApproved',ApprovedItems);
+AllAprrovedItems.put('/ItemsApproved',ApprovedItems);
 AllAprrovedItems.get('/ApprovedItems/:userD',getAllApproved);
 AllAprrovedItems.delete('/removeIncheck/:procheckID',DeleteApprovedItems);
 

@@ -61,12 +61,8 @@ AllItems.put('/CategoryEdit/:proID',CategoryUpdate);
 AllItems.put('/ColorEdit/:proID',ColorUpdate);
 AllItems.put('/MaterialEdit/:proID',MaterialUpdate);
 
-
-
 //admin add Items
 AllItems.post('/addItems',uploads,adminAddItems);
-
-
 
 AllItems.get('/getItemsByID/:id', getItemByID);
 AllItems.put('/updateItem', updateItem);

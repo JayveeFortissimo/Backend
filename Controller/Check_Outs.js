@@ -3,7 +3,24 @@ import db from '../Model/Database.js';
 function CheckOut(req, res) {
     const Datas = req.body;
 
-    const sql = `INSERT INTO check_out(picture, product_Name, size, start_Date, return_Date, price, quantity, subTotal, user_ID, status, item_id, code, Today) VALUES ?`;
+    const sql = `INSERT INTO check_out(picture,
+                                      product_Name,
+                                       size,
+                                       start_Date,
+                                       return_Date,
+                                       price,
+                                       quantity,
+                                       subTotal,
+                                       user_ID,
+                                       status,
+                                       item_id,
+                                       code,
+                                       Today,
+                                       Pickuped,
+                                       returned
+                                       ) VALUES ?`;
+
+
     const sql2 = `UPDATE size_table SET quantity = quantity - ? WHERE item_id = ? AND sizes=?`;
     const sql3 = `INSERT INTO adminnotifications(message, dates, user_ID) VALUES (?,?,?)`;
 
@@ -24,7 +41,10 @@ function CheckOut(req, res) {
         pro.status,
         pro.item_id,
         pro.code,
-        pro.Today
+        pro.Today,
+        pro.statusPickuped,
+        pro.returned,
+       
     ]);
 
     // Insert check_out data
@@ -47,22 +67,21 @@ function CheckOut(req, res) {
             }))
         });
 
-        let updatesDone = 0; // Track completed updates
+        let updatesDone = 0; 
 
-        // Update size for each item
+        
         Datas.forEach((pro, index) => {
             db.query(sql2, [pro.quantity, pro.item_id, pro.size], (err) => {
                 if (err) console.error(`Error updating size_table for item_id ${pro.item_id}:`, err);
                 
-                updatesDone++; // Increment after each update
+                updatesDone++; 
 
-                // If all updates are done, proceed with notification
+                
                 if (updatesDone === Datas.length) {
-                    // Insert admin notification
+                   
                     db.query(sql3, [message, startDate, pro.user_ID], (err) => {
                         if (err) return res.status(500).json("Problem with admin notification");
 
-                        // Emit WebSocket notification to admin
                         req.io.emit('newAdminNotification', {
                             message,
                             date: startDate,
@@ -82,7 +101,7 @@ function CheckOut(req, res) {
 
 
 
-//Lahat ng orders ilalagay sa profile
+
 function allOrders(req,res){
     const id = +req.params.orders_ID;
     const sql = `SELECT * FROM check_out WHERE user_ID =?`;
@@ -112,24 +131,9 @@ function ChangeStatus(req,res){
 }
 
 
-function Payments(req,res){
-
-    const {DATENOW, payment, Security,  Type, user_ID, code} = req.body;
-    const datas = [DATENOW,payment, Security, Type, user_ID, code];
-    const sql = `INSERT INTO payment(Datenow,payment,  Security, Type, user_ID, code) VALUES (?,?,?,?,?,?)`;
- 
- db.query(sql,datas,(err,result)=>{
-    if(err) return res.json("Have A Problem HERE");
-    return res.json("SUCCESS");
- });
-    
-  }
- 
-
 
 export{
     CheckOut,
     allOrders,
-    ChangeStatus,
-    Payments
+    ChangeStatus
 }

@@ -204,9 +204,6 @@ function TotalItems(req, res) {
          }
      
 
-
-    //Reserves Today
-
     function Today(req, res) {
     
         const singaporeTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' });

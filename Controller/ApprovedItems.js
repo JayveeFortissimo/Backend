@@ -1,7 +1,8 @@
 import db from '../Model/Database.js';
 
 function ApprovedItems(req, res) {
-  const sql = `INSERT INTO approved_items(product_Name, start_Date, return_Date, status, user_ID, picture, returned, product_ID, Pickuped, quantity, size, subTotal, code, Today,price) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+
+  const sql = `UPDATE check_out SET status =? WHERE user_ID =?`;
   const sql2 = `INSERT INTO user_notification(product_Name, message, user_ID, date) VALUES (?,?,?,?)`;
 
   const {
@@ -13,13 +14,6 @@ function ApprovedItems(req, res) {
       picture,
       returned,
       product_ID,
-      statusPickuped,
-      quantity,
-      size,
-      subTotal,
-      code,
-      Today,
-      price
   } = req.body;
 
   const message = "YOUR ITEM IS APPROVED";
@@ -28,7 +22,7 @@ function ApprovedItems(req, res) {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   const Starto = startDate.toLocaleDateString('en-US', options);
 
-  db.query(sql, [product_Name, start_Date, return_Date, status, user_ID, picture, returned, product_ID, statusPickuped, quantity, size, subTotal , code, Today, price], (err, result) => {
+  db.query(sql, [status, user_ID], (err, result) => {
       if (err) {
           return res.json({ error: "Cannot push, have a problem" });
       }
@@ -75,7 +69,7 @@ function DeleteApprovedItems(req,res){
 function getAllApproved(req,res){
 
  const id = +req.params.userD;
- const sql = `SELECT * FROM approved_items WHERE user_ID=?`;
+ const sql = `SELECT * FROM check_out WHERE user_ID=?`;
 
 db.query(sql,[id],(err,result)=>{
     if(err) return res.json("Failed");
@@ -90,7 +84,7 @@ function pickuped(req,res){
     const id = +req.params.prodID;
    const { Pickuped, total, code } = req.body;
 
-    const sql = `UPDATE approved_items SET Pickuped=? WHERE id=?`;
+    const sql = `UPDATE check_out SET Pickuped=? WHERE id=?`;
     
     db.query(sql,[Pickuped , id],(err, result)=>{
     if(err) return res.json("HAVE A PROBLEM HERE");
