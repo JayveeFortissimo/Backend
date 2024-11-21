@@ -88,12 +88,6 @@ function TotalItems(req, res) {
                 GROUP BY start_Date
     
                 UNION ALL
-                
-                SELECT start_date, COUNT(*) AS total_count
-                FROM approved_items
-                GROUP BY start_Date
-    
-                UNION ALL
     
                 SELECT start_Date, COUNT(*) AS total_count
                 FROM history
