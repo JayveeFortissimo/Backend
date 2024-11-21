@@ -121,7 +121,6 @@ function TotalItems(req, res) {
     
 
      
-
     function Today(req, res) {
         // Generate Filipino time directly (equivalent to Asia/Manila timezone)
         const filipinoTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
@@ -132,13 +131,14 @@ function TotalItems(req, res) {
     
         console.log('Generated Current Date:', currentDate); // Debug Filipino date
     
-        // SQL queries using the correctly formatted date
+        // SQL query to fetch reservations for today
         const sql = `
             SELECT * FROM check_out WHERE Today = '${currentDate}'
         `;
     
+        // SQL query to sum up quantities for today’s reservations
         const countSql = `
-            SELECT COUNT(*) AS checkOutCount FROM check_out WHERE Today = '${currentDate}'
+            SELECT COALESCE(SUM(quantity), 0) AS totalQuantity FROM check_out WHERE Today = '${currentDate}'
         `;
     
         console.log('SQL Query:', sql); // Debug query
@@ -153,36 +153,38 @@ function TotalItems(req, res) {
     
             console.log('Reservation Result:', reservationResult); // Debug fetched reservations
     
-            // Execute the second query to fetch the reservation count
+            // Execute the second query to fetch the total quantity for today’s reservations
             db.query(countSql, (err, countResult) => {
                 if (err) {
-                    console.error('Error fetching reservation count:', err);
-                    return res.status(500).json({ error: "Cannot fetch reservation count" });
+                    console.error('Error fetching reservation quantity total:', err);
+                    return res.status(500).json({ error: "Cannot fetch reservation quantity total" });
                 }
     
                 console.log('Count Result:', countResult); // Debug count result
     
-                // Get the total count from the query result
-                const checkOutCount = countResult[0]?.checkOutCount || 0;
+                // Get the total quantity from the query result
+                const totalQuantity = countResult[0]?.totalQuantity || 0;
     
-                // Send the response with total reservations and reservation details
+                // Send the response with total quantity and reservation details
                 return res.status(200).json({
-                    totalReservations: checkOutCount,
+                    totalReservations: totalQuantity,
                     reservations: reservationResult
                 });
             });
         });
     }
+    
 
 
 
     function TotalofReservation(req, res) {
         const sql = `
-           SELECT * FROM check_out 
+            SELECT * FROM check_out
         `;
     
         const countSql = `
-            SELECT (SELECT COUNT(*) FROM check_out) AS checkOutCount
+            SELECT COALESCE(SUM(quantity), 0) AS checkOutQuantityTotal
+            FROM check_out
         `;
     
         db.query(sql, (err, reservationResult) => {
@@ -193,19 +195,20 @@ function TotalItems(req, res) {
     
             db.query(countSql, (err, countResult) => {
                 if (err) {
-                    console.error('Error fetching reservation count:', err); // Log the error for debugging
-                    return res.status(500).json({ error: "Cannot fetch reservation count" });
+                    console.error('Error fetching reservation quantity total:', err); // Log the error for debugging
+                    return res.status(500).json({ error: "Cannot fetch reservation quantity total" });
                 }
     
-                const totalCount = countResult[0].checkOutCount || 0;
-                
+                const totalQuantity = countResult[0].checkOutQuantityTotal || 0;
+    
                 return res.status(200).json({
-                    totalReservations: totalCount,
+                    totalReservations: totalQuantity,
                     reservations: reservationResult
                 });
             });
         });
     }
+    
     
     
     

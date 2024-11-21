@@ -55,6 +55,7 @@ function CheckOut(req, res) {
 
         req.io.emit('newCheckOut', {
             checkouts: Datas.map(pro => ({
+                name:pro.name,
                 picture: pro.picture,
                 product_Name: pro.product_Name,
                 size: pro.size,
