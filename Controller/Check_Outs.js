@@ -3,7 +3,9 @@ import db from '../Model/Database.js';
 function CheckOut(req, res) {
     const Datas = req.body;
 
-    const sql = `INSERT INTO check_out(picture,
+    const sql = `INSERT INTO check_out(
+                                       name,
+                                      picture,
                                       product_Name,
                                        size,
                                        start_Date,
@@ -29,6 +31,7 @@ function CheckOut(req, res) {
     const startDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
     const values = Datas.map(pro => [
+        pro.name,
         pro.picture,
         pro.product_Name,
         pro.size,
@@ -47,11 +50,9 @@ function CheckOut(req, res) {
        
     ]);
 
-    // Insert check_out data
     db.query(sql, [values], (err) => {
         if (err) return res.status(500).json({ message: 'Data not submitted successfully' });
 
-        // Emit the checkout event for admin
         req.io.emit('newCheckOut', {
             checkouts: Datas.map(pro => ({
                 picture: pro.picture,

@@ -1,67 +1,5 @@
 import db from '../Model/Database.js';
 
-//!NOTSURE PA D2 DAT AFTER APPROVE TSAKA lAG SYA MAG COCOUNT
-function TotalofReservation(req, res) {
-    const sql = `
-        SELECT 
-            a.product_ID AS ItemID, 
-            a.product_Name, 
-            a.user_ID AS CustomerID, 
-            a.start_Date AS StartDate, 
-            a.return_Date AS ExpectedReturnDate, 
-            a.status, 
-            a.quantity,
-            a.picture,
-            'Approved' AS ReservationType,
-            c.name  
-        FROM approved_items a
-        JOIN credentials c ON a.user_ID = c.id  
-        UNION ALL
-        SELECT 
-            c.item_id AS ItemID, 
-            c.product_Name, 
-            c.user_ID AS CustomerID, 
-            c.start_Date AS StartDate, 
-            c.return_Date AS ExpectedReturnDate, 
-            c.status, 
-            c.quantity,
-            c.picture,
-            'Checked Out' AS ReservationType,
-            cc.name  
-        FROM check_out c
-        JOIN credentials cc ON c.user_ID = cc.id  
-    `;
-
-    const countSql = `
-        SELECT 
-            (SELECT COUNT(*) FROM approved_items) AS approvedCount,
-            (SELECT COUNT(*) FROM check_out) AS checkOutCount
-    `;
-
-    db.query(sql, (err, reservationResult) => {
-        if (err) {
-            console.error('Error fetching reservation details:', err); // Log the error for debugging
-            return res.status(500).json({ error: "Cannot fetch reservation details" });
-        }
-
-        db.query(countSql, (err, countResult) => {
-            if (err) {
-                console.error('Error fetching reservation count:', err); // Log the error for debugging
-                return res.status(500).json({ error: "Cannot fetch reservation count" });
-            }
-
-            const totalCount = countResult[0].approvedCount + countResult[0].checkOutCount;
-
-            return res.status(200).json({
-                totalReservations: totalCount,
-                reservations: reservationResult
-            });
-        });
-    });
-}
-
-
-
 
 function TotalItems(req, res) {
     const sql = `SELECT SUM(quantity) AS totalQuantity FROM size_table`;
@@ -92,8 +30,6 @@ function TotalItems(req, res) {
 };
 
 
-
-
     function TotalUser(req, res) {
     
         const countSql = `SELECT COUNT(name) AS totalUser FROM credentials WHERE is_Admin = 0`;
@@ -103,7 +39,6 @@ function TotalItems(req, res) {
         db.query(countSql, (err, countResult) => {
             if (err) return res.json("Cannot fetch sum of items");
     
-            
             db.query(usersSql, (err, usersResult) => {
                 if (err) return res.json("Cannot fetch users");
     
@@ -112,8 +47,6 @@ function TotalItems(req, res) {
                     users: usersResult
                 };
 
-             
-    
                 return res.status(200).json(response);
             });
         });
@@ -122,7 +55,7 @@ function TotalItems(req, res) {
 
 
     function  TotalCacelled(req, res) {
-        // Fetch details from both the 'cancelled' table and the 'credentials' table using a join
+
         const sql = `
           SELECT c.*, cr.name, 
           (SELECT COUNT(*) FROM cancelled) AS totalCancelled 
@@ -170,107 +103,102 @@ function TotalItems(req, res) {
             ORDER BY MONTH(STR_TO_DATE(month, '%M'))
         `;
     
-        // Execute the query
+
         db.query(sql, (error, results) => {
             if (error) {
                 return res.status(500).json({ error: error.message });
             }
             
-            // Format results into the desired structure
             const formattedResults = results.map(row => ({
                 Date: row.month,
                 total_count: row.total_count
             }));
 
     
-            // Return the formatted results
             res.status(200).json(formattedResults);
         });
     }
     
 
-    function DamageItems(req,res){
-        const {code, date} = req.body;
-         const sql = `UPDATE payment SET Datenow =? WHERE code =?`;
-             
-        db.query(sql,[date,code],(err,result)=>{
-         if(err) return res.json("HAVE A PROBLEM HERE");
-     
-         req.io.emit("securityUpdated", { code, Security: 0 });
-     
-             return res.json("OK")
-        })
-     
-         }
      
 
     function Today(req, res) {
+        // Generate Filipino time directly (equivalent to Asia/Manila timezone)
+        const filipinoTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
     
-        const singaporeTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' });
-        const currentDate = new Date(singaporeTime).toISOString().split('T')[0];
+        // Extract the date part in the YYYY-MM-DD format
+        const [month, day, year] = filipinoTime.split(/[/,\s]+/); // Split into MM/DD/YYYY
+        const currentDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`; // Format as YYYY-MM-DD
     
+        console.log('Generated Current Date:', currentDate); // Debug Filipino date
+    
+        // SQL queries using the correctly formatted date
         const sql = `
-            SELECT 
-                a.product_ID AS ItemID, 
-                a.product_Name, 
-                a.user_ID AS CustomerID, 
-                a.start_Date AS StartDate, 
-                a.return_Date AS ExpectedReturnDate, 
-                a.status, 
-                a.quantity,
-                a.picture,
-                'Approved' AS ReservationType,
-                c.name,
-                a.Today
-            FROM approved_items a
-            JOIN credentials c ON a.user_ID = c.id  
-            WHERE DATE(a.Today) = '${currentDate}'
-            
-            UNION ALL
-            
-            SELECT 
-                c.item_id AS ItemID, 
-                c.product_Name, 
-                c.user_ID AS CustomerID, 
-                c.start_Date AS StartDate, 
-                c.return_Date AS ExpectedReturnDate, 
-                c.status, 
-                c.quantity,
-                c.picture,
-                'Checked Out' AS ReservationType,
-                cc.name,
-                c.Today
-            FROM check_out c
-            JOIN credentials cc ON c.user_ID = cc.id  
-            WHERE DATE(c.Today) = '${currentDate}'
+            SELECT * FROM check_out WHERE Today = '${currentDate}'
         `;
     
-        // SQL query to fetch counts of approved and check_out items for today
         const countSql = `
-            SELECT 
-                (SELECT COUNT(*) FROM approved_items WHERE DATE(Today) = '${currentDate}') AS approvedCount,
-                (SELECT COUNT(*) FROM check_out WHERE DATE(Today) = '${currentDate}') AS checkOutCount
+            SELECT COUNT(*) AS checkOutCount FROM check_out WHERE Today = '${currentDate}'
         `;
     
-        // Execute the main SQL query to fetch reservations
+        console.log('SQL Query:', sql); // Debug query
+        console.log('Count Query:', countSql); // Debug count query
+    
+        // Execute the first query to fetch reservation details
         db.query(sql, (err, reservationResult) => {
             if (err) {
                 console.error('Error fetching reservation details:', err);
                 return res.status(500).json({ error: "Cannot fetch reservation details" });
             }
     
-            // Execute the count SQL query to fetch counts of reservations
+            console.log('Reservation Result:', reservationResult); // Debug fetched reservations
+    
+            // Execute the second query to fetch the reservation count
             db.query(countSql, (err, countResult) => {
                 if (err) {
                     console.error('Error fetching reservation count:', err);
                     return res.status(500).json({ error: "Cannot fetch reservation count" });
                 }
     
-                // Calculate total reservations count
-                const totalCount = (countResult[0]?.approvedCount || 0) + (countResult[0]?.checkOutCount || 0);
-            
+                console.log('Count Result:', countResult); // Debug count result
+    
+                // Get the total count from the query result
+                const checkOutCount = countResult[0]?.checkOutCount || 0;
+    
+                // Send the response with total reservations and reservation details
+                return res.status(200).json({
+                    totalReservations: checkOutCount,
+                    reservations: reservationResult
+                });
+            });
+        });
+    }
 
-                // Return response with total count and reservation details
+
+
+    function TotalofReservation(req, res) {
+        const sql = `
+           SELECT * FROM check_out 
+        `;
+    
+        const countSql = `
+            SELECT (SELECT COUNT(*) FROM check_out) AS checkOutCount
+        `;
+    
+        db.query(sql, (err, reservationResult) => {
+            if (err) {
+                console.error('Error fetching reservation details:', err); // Log the error for debugging
+                return res.status(500).json({ error: "Cannot fetch reservation details" });
+            }
+    
+            db.query(countSql, (err, countResult) => {
+                if (err) {
+                    console.error('Error fetching reservation count:', err); // Log the error for debugging
+                    return res.status(500).json({ error: "Cannot fetch reservation count" });
+                }
+    
+                const totalCount = countResult[0].checkOutCount || 0;
+                
                 return res.status(200).json({
                     totalReservations: totalCount,
                     reservations: reservationResult
@@ -278,6 +206,8 @@ function TotalItems(req, res) {
             });
         });
     }
+    
+    
     
 
 
@@ -287,7 +217,6 @@ export{
     TotalUser,
     TotalCacelled,
     ReservationTrends,
-
     Today,
-    DamageItems
+  
 }
