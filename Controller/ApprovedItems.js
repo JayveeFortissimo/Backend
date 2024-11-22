@@ -2,7 +2,7 @@ import db from '../Model/Database.js';
 
 function ApprovedItems(req, res) {
 
-  const sql = `UPDATE check_out SET status =? WHERE user_ID =?`;
+  const sql = `UPDATE check_out SET status =? WHERE id =?`;
   const sql2 = `INSERT INTO user_notification(product_Name, message, user_ID, date) VALUES (?,?,?,?)`;
 
   const {
@@ -22,7 +22,7 @@ function ApprovedItems(req, res) {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   const Starto = startDate.toLocaleDateString('en-US', options);
 
-  db.query(sql, [status, user_ID], (err, result) => {
+  db.query(sql, [status, product_ID], (err, result) => {
       if (err) {
           return res.json({ error: "Cannot push, have a problem" });
       }
