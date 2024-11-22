@@ -1,7 +1,7 @@
 import db from '../Model/Database.js';
 
 function CancelledItems(req, res) {
-    const sql = 'INSERT INTO cancelled(picture,Name,Price,start_Date,return_Date,user_ID, quantity, Reason, status, item_id, size, code, sub_Total) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)';
+    const sql = 'INSERT INTO cancelled(picture,Name,Price,start_Date,return_Date,user_ID, quantity, Reason, status, item_id, size, code, sub_Total,Today) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
     const DeleteQl = 'DELETE FROM check_out WHERE user_ID = ? AND id = ?';
     const quantityBack = 'UPDATE size_table SET quantity = quantity + ? WHERE item_id = ? AND sizes = ?';
     const sql2 = 'INSERT INTO user_notification(product_Name, message, user_ID, date) VALUES (?,?,?,?)';
@@ -21,7 +21,8 @@ function CancelledItems(req, res) {
         size,
         id,
         code,
-        sub_Total
+        sub_Total,
+        Today
     } = req.body;
 
     const message = "YOUR ITEM IS CANCELLED";  
@@ -31,7 +32,7 @@ function CancelledItems(req, res) {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     const Starto = startDate.toLocaleDateString('en-US', options);
 
-    db.query(sql, [picture, name, price, start_Date, return_Date, user_ID, quantity, Reason, status, item_id, size, code, sub_Total], (error, result) => {
+    db.query(sql, [picture, name, price, start_Date, return_Date, user_ID, quantity, Reason, status, item_id, size, code, sub_Total,Today], (error, result) => {
         if (error) {
             console.error("Error inserting into cancelled table:", error);
             return res.status(500).json({ error: "Cannot cancel item" });

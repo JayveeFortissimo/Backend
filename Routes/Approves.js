@@ -6,14 +6,9 @@ import { ApprovedItems, DeleteApprovedItems, getAllApproved, pickuped} from '../
 
 const AllAprrovedItems = express.Router();
 
-
-
-//sa may Approve e2 
 AllAprrovedItems.put('/ItemsApproved',ApprovedItems);
 AllAprrovedItems.get('/ApprovedItems/:userD',getAllApproved);
 AllAprrovedItems.delete('/removeIncheck/:procheckID',DeleteApprovedItems);
-
-//!WAIT HERE 
 AllAprrovedItems.put('/itemPickuped/:prodID', pickuped);
 
 

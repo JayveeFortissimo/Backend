@@ -3,8 +3,6 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 
-
-
 function allItems(req, res) {
   const userId = req.user ? req.user.id : null; // Assuming you are using some authentication middleware
 
@@ -672,7 +670,7 @@ function DeleteMaterials(req,res){
 function MostPicked(req, res) {
   const sql = `
     SELECT product_Name, picture, SUM(quantity) AS total_quantity
-    FROM approved_items
+    FROM check_out
     GROUP BY product_Name, picture
     ORDER BY total_quantity DESC
     LIMIT 3;
