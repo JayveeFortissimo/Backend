@@ -19,12 +19,11 @@ function TotalItems(req, res) {
 
         db.query(sqls, (err, results) => {
             if (err) return res.json("Cannot fetch sum of items");
-    
+
             return res.status(200).json({SumAll:result[0], INFO:results});
-            
+         
         });
     
-       
     });
 
 };
@@ -116,50 +115,39 @@ function TotalItems(req, res) {
 
      
     function Today(req, res) {
-        // Generate Filipino time directly (equivalent to Asia/Manila timezone)
+   
         const filipinoTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
     
-        // Extract the date part in the YYYY-MM-DD format
-        const [month, day, year] = filipinoTime.split(/[/,\s]+/); // Split into MM/DD/YYYY
-        const currentDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`; // Format as YYYY-MM-DD
+        const [month, day, year] = filipinoTime.split(/[/,\s]+/); 
+        const currentDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`; 
     
-        console.log('Generated Current Date:', currentDate); // Debug Filipino date
-    
-        // SQL query to fetch reservations for today
         const sql = `
             SELECT * FROM check_out WHERE Today = '${currentDate}'
         `;
     
-        // SQL query to sum up quantities for today’s reservations
         const countSql = `
             SELECT COALESCE(SUM(quantity), 0) AS totalQuantity FROM check_out WHERE Today = '${currentDate}'
         `;
     
-        console.log('SQL Query:', sql); // Debug query
-        console.log('Count Query:', countSql); // Debug count query
-    
-        // Execute the first query to fetch reservation details
+ 
         db.query(sql, (err, reservationResult) => {
             if (err) {
                 console.error('Error fetching reservation details:', err);
                 return res.status(500).json({ error: "Cannot fetch reservation details" });
             }
     
-            console.log('Reservation Result:', reservationResult); // Debug fetched reservations
+            console.log('Reservation Result:', reservationResult); 
     
-            // Execute the second query to fetch the total quantity for today’s reservations
             db.query(countSql, (err, countResult) => {
                 if (err) {
                     console.error('Error fetching reservation quantity total:', err);
                     return res.status(500).json({ error: "Cannot fetch reservation quantity total" });
                 }
     
-                console.log('Count Result:', countResult); // Debug count result
+                console.log('Count Result:', countResult); 
     
-                // Get the total quantity from the query result
                 const totalQuantity = countResult[0]?.totalQuantity || 0;
     
-                // Send the response with total quantity and reservation details
                 return res.status(200).json({
                     totalReservations: totalQuantity,
                     reservations: reservationResult
@@ -172,39 +160,58 @@ function TotalItems(req, res) {
 
 
     function TotalofReservation(req, res) {
-        const sql = `
-            SELECT * FROM check_out
-        `;
-    
-        const countSql = `
-            SELECT COALESCE(SUM(quantity), 0) AS checkOutQuantityTotal
-            FROM check_out
-        `;
-    
-        db.query(sql, (err, reservationResult) => {
-            if (err) {
-                console.error('Error fetching reservation details:', err); // Log the error for debugging
-                return res.status(500).json({ error: "Cannot fetch reservation details" });
-            }
-    
-            db.query(countSql, (err, countResult) => {
-                if (err) {
-                    console.error('Error fetching reservation quantity total:', err); // Log the error for debugging
-                    return res.status(500).json({ error: "Cannot fetch reservation quantity total" });
-                }
-    
-                const totalQuantity = countResult[0].checkOutQuantityTotal || 0;
-    
-                return res.status(200).json({
-                    totalReservations: totalQuantity,
-                    reservations: reservationResult
-                });
-            });
-        });
-    }
-    
-    
-    
+      
+       const sql = `
+           SELECT * FROM check_out 
+       `;
+
+       const countSql = `
+           SELECT COALESCE(SUM(quantity), 0) AS totalQuantity FROM check_out
+       `;
+   
+
+       db.query(sql, (err, reservationResult) => {
+           if (err) {
+               console.error('Error fetching reservation details:', err);
+               return res.status(500).json({ error: "Cannot fetch reservation details" });
+           }
+   
+           db.query(countSql, (err, countResult) => {
+               if (err) {
+                   console.error('Error fetching reservation quantity total:', err);
+                   return res.status(500).json({ error: "Cannot fetch reservation quantity total" });
+               }
+   
+               const totalQuantity = countResult[0]?.totalQuantity || 0;
+
+               return res.status(200).json({
+                   totalReservations: totalQuantity,
+                   reservations: reservationResult
+               });
+           });
+       });
+ }
+
+
+
+
+ function PieChart(req, res) {
+    const sql = `
+        SELECT type, COUNT(type) AS count 
+        FROM check_out
+        GROUP BY type
+    `;
+
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error("Error fetching data:", err);
+            res.status(500).send("Server error");
+        } else {
+            res.json(results);
+        }
+    });
+}
+
     
 
 
@@ -215,5 +222,5 @@ export{
     TotalCacelled,
     ReservationTrends,
     Today,
-  
+    PieChart
 }

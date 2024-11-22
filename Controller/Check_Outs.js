@@ -19,7 +19,8 @@ function CheckOut(req, res) {
                                        code,
                                        Today,
                                        Pickuped,
-                                       returned
+                                       returned,
+                                       type
                                        ) VALUES ?`;
 
 
@@ -47,7 +48,7 @@ function CheckOut(req, res) {
         pro.Today,
         pro.statusPickuped,
         pro.returned,
-       
+        pro.type
     ]);
 
     db.query(sql, [values], (err) => {

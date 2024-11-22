@@ -146,9 +146,46 @@ async function newPassword(req,res){
 }
 
 
+
+
+function Thanks(req, res) {
+
+    const { email } = req.body;
+
+            const transporter = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
+                port: 465,
+                secure: true,
+                auth: {
+                    user: process.env.USERMAIL,
+                    pass: process.env.PASSWORD
+                }
+            });
+         
+                const mail = {
+                    to: email,
+                    subject: `Hello ${email}! Thanks for trusting use Christobal Collections`,
+                    html: `
+                        <p><strong>Please if you have a time Fill up this form for Revies:</strong> ${email}</p>
+                    `,
+                    replyTo: email
+                };
+        
+                transporter.sendMail(mail, (err, info) => {
+                    if (err) {
+                        return res.json("Email cannot be sent");
+                    }
+                    return res.json("Message successfully sent");
+                });  
+       
+}
+
+
+
 export{
     mail,
     ForgotPassword,
     isOTP,
-    newPassword
+    newPassword,
+    Thanks
 };

@@ -1,7 +1,7 @@
 import express,{ Router } from "express";
 
 //mail
-import {mail, ForgotPassword, isOTP, newPassword} from "../Controller/Mailer.js";
+import {mail, ForgotPassword, isOTP, newPassword, Thanks} from "../Controller/Mailer.js";
 
 const AllMailers = express.Router();
 
@@ -9,8 +9,9 @@ const AllMailers = express.Router();
 AllMailers.post('/email',mail);
 AllMailers.post('/ForgotPassword',ForgotPassword);
 AllMailers.post('/OTP',isOTP);
-AllMailers.put('/resetPassword',newPassword)
+AllMailers.put('/resetPassword',newPassword);
 
+AllMailers.post('/thankyou',Thanks);
 
 
 export default AllMailers;
