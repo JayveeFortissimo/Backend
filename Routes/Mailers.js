@@ -10,7 +10,6 @@ AllMailers.post('/email',mail);
 AllMailers.post('/ForgotPassword',ForgotPassword);
 AllMailers.post('/OTP',isOTP);
 AllMailers.put('/resetPassword',newPassword);
-
 AllMailers.post('/thankyou',Thanks);
 
 

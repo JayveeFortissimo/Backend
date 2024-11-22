@@ -166,7 +166,7 @@ function Thanks(req, res) {
                     to: email,
                     subject: `Hello ${email}! Thanks for trusting use Christobal Collections`,
                     html: `
-                        <p><strong>Please if you have a time Fill up this form for Revies:</strong> ${email}</p>
+                        <p><strong>Please if you have a time Fill up this form for Revies:</strong> ${'https://docs.google.com/forms/d/e/1FAIpQLSc30TriVIQ-VrjBh_UwLdecsc79nV3ftHREcer79aHiBUr1Bw/viewform?usp=sf_link'}</p>
                     `,
                     replyTo: email
                 };
