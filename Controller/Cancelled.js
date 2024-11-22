@@ -75,7 +75,6 @@ function CancelledItems(req, res) {
 
                 req.io.emit('bellsDash');
 
-
                 db.query(sql2, [name, message, user_ID, Starto], (error, result) => {
                     if (error) {
                         console.error("Error inserting into user_notification:", error);
