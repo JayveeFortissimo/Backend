@@ -129,14 +129,11 @@ function TotalItems(req, res) {
             SELECT COALESCE(SUM(quantity), 0) AS totalQuantity FROM check_out WHERE Today = '${currentDate}'
         `;
     
- 
         db.query(sql, (err, reservationResult) => {
             if (err) {
                 console.error('Error fetching reservation details:', err);
                 return res.status(500).json({ error: "Cannot fetch reservation details" });
             }
-    
-            console.log('Reservation Result:', reservationResult); 
     
             db.query(countSql, (err, countResult) => {
                 if (err) {
@@ -156,7 +153,6 @@ function TotalItems(req, res) {
         });
     }
     
-
 
 
     function TotalofReservation(req, res) {
