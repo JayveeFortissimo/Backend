@@ -164,7 +164,6 @@ function TotalItems(req, res) {
        const countSql = `
            SELECT COALESCE(SUM(quantity), 0) AS totalQuantity FROM check_out
        `;
-   
 
        db.query(sql, (err, reservationResult) => {
            if (err) {
