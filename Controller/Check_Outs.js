@@ -1,5 +1,6 @@
 import db from '../Model/Database.js';
 
+
 function CheckOut(req, res) {
     const Datas = req.body;
 
@@ -26,6 +27,8 @@ function CheckOut(req, res) {
 
     const sql2 = `UPDATE size_table SET quantity = quantity - ? WHERE item_id = ? AND sizes=?`;
     const sql3 = `INSERT INTO adminnotifications(message, dates, user_ID) VALUES (?,?,?)`;
+    const sqlPieChart = `SELECT type, COUNT(type) AS count FROM check_out GROUP BY type`; // Query for pie chart data
+
 
     const message = "Have A New Reserved Items";
     const date = new Date();
@@ -68,6 +71,16 @@ function CheckOut(req, res) {
                 user_ID: pro.user_ID,
                 status: pro.status,
             }))
+        });
+
+
+         // Query and emit updated pie chart data
+         db.query(sqlPieChart, (err, pieChartResults) => {
+            if (err) return console.error("Error fetching pie chart data:", err);
+
+            req.io.emit('piecharizz', {
+                pieChartData: pieChartResults
+            });
         });
 
         let updatesDone = 0; 

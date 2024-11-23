@@ -106,7 +106,6 @@ function TotalItems(req, res) {
                 Date: row.month,
                 total_count: row.total_count
             }));
-
     
             res.status(200).json(formattedResults);
         });
@@ -188,8 +187,6 @@ function TotalItems(req, res) {
  }
 
 
-
-
  function PieChart(req, res) {
     const sql = `
         SELECT type, COUNT(type) AS count 
@@ -199,7 +196,6 @@ function TotalItems(req, res) {
 
     db.query(sql, (err, results) => {
         if (err) {
-            console.error("Error fetching data:", err);
             res.status(500).send("Server error");
         } else {
             res.json(results);
