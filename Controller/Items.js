@@ -665,8 +665,7 @@ function DeleteMaterials(req,res){
 }
 
 
-//!!!!!!!!!!HOMEPAGE MOST PICKED ITEMSSSSS
-//SA HISTORY DAPAT 2
+
 function MostPicked(req, res) {
   const sql = `
     SELECT product_Name, picture, SUM(quantity) AS total_quantity
@@ -675,15 +674,13 @@ function MostPicked(req, res) {
     ORDER BY total_quantity DESC
     LIMIT 3;
   `;
-
-  console.log('Executing query:', sql);  // Log the query before execution
   
   db.query(sql, (err, results) => {
     if (err) {
-      console.error('Error executing query:', err);  // Log the error details
+      console.error('Error executing query:', err);  
       return res.status(500).json({ 
         error: 'Database query error',
-        details: err.message  // Include the error message for debugging
+        details: err.message  
       });
     }
 
@@ -692,8 +689,8 @@ function MostPicked(req, res) {
       return res.status(404).json({ message: 'No most picked items found.' });
     }
 
-    console.log('Query results:', results);  // Log the results
-    res.json(results);  // Send back the data
+    console.log('Query results:', results);  
+    res.json(results); 
   });
 }
 
