@@ -665,16 +665,19 @@ function DeleteMaterials(req,res){
 }
 
 
-
 function MostPicked(req, res) {
   const sql = `
-    SELECT product_Name, picture, SUM(quantity) AS total_quantity
-    FROM check_out
-    GROUP BY product_Name, picture
+    (SELECT product_Name, picture, SUM(quantity) AS total_quantity
+     FROM check_out
+     GROUP BY product_Name, picture)
+    UNION
+    (SELECT product_Name, picture, SUM(quantity) AS total_quantity
+     FROM history
+     GROUP BY product_Name, picture)
     ORDER BY total_quantity DESC
     LIMIT 3;
   `;
-  
+
   db.query(sql, (err, results) => {
     if (err) {
       console.error('Error executing query:', err);  
