@@ -65,11 +65,6 @@ function TotalItems(req, res) {
         db.query(sql, (err, result) => {
           if (err) return res.status(500).json("Cannot fetch cancelled items");
 
-          req.io.emit('TotalCancelled',{
-            totalCancelled: result.length,
-            cancelledDetails: result,
-          });
-
           return res.status(200).json({
             totalCancelled: result.length,
             cancelledDetails: result,
