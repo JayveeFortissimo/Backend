@@ -127,11 +127,30 @@ function EditStatus1(req, res) {
 
 
 
+function getTimeSlotCount(req, res) {
+    const { date, time } = req.query;
+    
+    const sql = `
+      SELECT COUNT(*) as count 
+      FROM fitting_appointment 
+      WHERE date = ? AND prefer_Time = ?
+    `;
+    
+    db.query(sql, [date, time], (err, result) => {
+      if (err) return res.json("Have A Problem");
+      return res.status(200).json(result[0].count);
+    });
+
+  }
+  
+
+
 
 
 export{
     appointment,
     getAppointment,
     getAllAppointments,
-    EditStatus1
+    EditStatus1,
+    getTimeSlotCount
 }
