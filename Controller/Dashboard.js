@@ -183,6 +183,16 @@ function TotalItems(req, res) {
 
 
 
+function HistoryDashboard(req,res){
+    
+    const sql = `SELECT * FROM history`;
+    db.query(sql,(err,result)=>{
+      if(err) return res.json("Have A Problems");
+      return res.status(200).json(result);
+    });
+    
+  }
+
 
 
 export{
@@ -191,5 +201,6 @@ export{
     TotalUser,
     TotalCacelled,
     ReservationTrends,
-    Today
+    Today,
+    HistoryDashboard
 }

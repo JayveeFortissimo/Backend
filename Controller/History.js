@@ -12,12 +12,13 @@ function to_History(req, res) {
       quantity,
       code,
       price,
+      name
   } = req.body;
 
 
   const sql = `INSERT INTO history(
-      product_Name, picture, start_Date, return_Date, status, user_ID, penalty, quantity, price
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      product_Name, picture, start_Date, return_Date, status, user_ID, penalty, quantity, price, name
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
   const sql2 = `INSERT INTO user_notification(
       product_Name, message, user_ID, date
   ) VALUES (?, ?, ?, ?)`;
@@ -27,7 +28,7 @@ function to_History(req, res) {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   const Starto = date.toLocaleDateString('en-US', options);
 
-  db.query(sql, [product_Name, picture, start_Date, return_Date, status, user_ID, penalty, quantity, price], (err, result) => {
+  db.query(sql, [product_Name, picture, start_Date, return_Date, status, user_ID, penalty, quantity, price, name], (err, result) => {
       if (err) {
           return res.status(500).json({ error: "Error inserting into history" });
       }

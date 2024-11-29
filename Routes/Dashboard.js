@@ -7,7 +7,8 @@ import {
      TotalUser,
      TotalCacelled, 
      ReservationTrends,
-     Today
+     Today,
+     HistoryDashboard
     } from '../Controller/Dashboard.js';
 
 const DashboardAdmin  = express.Router();
@@ -18,6 +19,7 @@ DashboardAdmin.get('/totalUsers',TotalUser);
 DashboardAdmin.get('/AllCancelled',TotalCacelled);
 DashboardAdmin.get('/AllTrends',ReservationTrends);
 DashboardAdmin.get('/Today',Today);
+DashboardAdmin.get('/DashboardHistory',HistoryDashboard);
 
 
 
