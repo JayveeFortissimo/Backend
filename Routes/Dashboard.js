@@ -7,8 +7,7 @@ import {
      TotalUser,
      TotalCacelled, 
      ReservationTrends,
-     Today,
-     PieChart
+     Today
     } from '../Controller/Dashboard.js';
 
 const DashboardAdmin  = express.Router();
@@ -19,7 +18,7 @@ DashboardAdmin.get('/totalUsers',TotalUser);
 DashboardAdmin.get('/AllCancelled',TotalCacelled);
 DashboardAdmin.get('/AllTrends',ReservationTrends);
 DashboardAdmin.get('/Today',Today);
-DashboardAdmin.get('/PieCharts', PieChart);
+
 
 
 export default DashboardAdmin;

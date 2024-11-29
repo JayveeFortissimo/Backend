@@ -182,23 +182,7 @@ function TotalItems(req, res) {
  }
 
 
- function PieChart(req, res) {
-    const sql = `
-        SELECT type, COUNT(type) AS count 
-        FROM check_out
-        GROUP BY type
-    `;
 
-    db.query(sql, (err, results) => {
-        if (err) {
-            res.status(500).send("Server error");
-        } else {
-            res.json(results);
-        }
-    });
-}
-
-    
 
 
 export{
@@ -207,6 +191,5 @@ export{
     TotalUser,
     TotalCacelled,
     ReservationTrends,
-    Today,
-    PieChart
+    Today
 }
