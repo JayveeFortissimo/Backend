@@ -85,7 +85,7 @@ function generateOTP() {
   // Function to send response, ensuring it is only called once
   function sendResponse(newUserId, generatedReferralCode, email) {
      //!Eto yung binago KO
-    const token = jwt.sign({id:newUserId, email:email}, process.env.ACESSTOKEN, { expiresIn: '5h' });
+    const token = jwt.sign({id:newUserId, email:email}, process.env.ACESSTOKEN, { expiresIn: '20h' });
 
       res.status(201).json({
         //!Eto den
@@ -120,7 +120,7 @@ async function login(req,res){
           return res.status(401).json("Invalid credentials");
         }
        
-        const token = jwt.sign({id:data.id,email: data.email}, process.env.ACESSTOKEN, { expiresIn: '5h' });
+        const token = jwt.sign({id:data.id,email: data.email}, process.env.ACESSTOKEN, { expiresIn: '20h' });
   
         setTimeout(()=>{
             return res.status(201).json({ status: 'success', email, token,uersID:data.id,is_Admin:Boolean(data.is_Admin)});
