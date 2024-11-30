@@ -1,12 +1,10 @@
 import db from '../Model/Database.js';
 
 function to_History(req, res) {
-
-
   const filipinoTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
-    
-        const [month, day, year] = filipinoTime.split(/[/,\s]+/); 
-        const currentDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`; 
+
+  const [month, day, year] = filipinoTime.split(/[/,\s]+/); 
+  const currentDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
   const {
       product_Name,
@@ -19,16 +17,20 @@ function to_History(req, res) {
       quantity,
       code,
       price,
-      name
+      name,
+      size,
+      item_id,  
   } = req.body;
-
 
   const sql = `INSERT INTO history(
       product_Name, picture, start_Date, return_Date, status, user_ID, penalty, quantity, price, name, Treturns
   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
   const sql2 = `INSERT INTO user_notification(
       product_Name, message, user_ID, date
   ) VALUES (?, ?, ?, ?)`;
+
+  const sql3 = `UPDATE size_table SET quantity = quantity + ? WHERE item_id = ? AND sizes = ?`;
 
   const message = "YOUR ITEM IS COMPLETED";
   const date = new Date();
@@ -47,8 +49,14 @@ function to_History(req, res) {
               return res.status(500).json({ error: "Error inserting into notifications" });
           }
 
-              return res.json({ success: "Item approved and notification sent!" });
-       
+          // Add sql3 query here to update the size_table
+          db.query(sql3, [quantity, item_id, size], (err3, result3) => {
+              if (err3) {
+                  return res.status(500).json({ error: "Error updating size table" });
+              }
+
+              return res.json({ success: "Item approved, notification sent, and size table updated!" });
+          });
       });
   });
 }
