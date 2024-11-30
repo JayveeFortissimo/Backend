@@ -1,6 +1,13 @@
 import db from '../Model/Database.js';
 
 function to_History(req, res) {
+
+
+  const filipinoTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
+    
+        const [month, day, year] = filipinoTime.split(/[/,\s]+/); 
+        const currentDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`; 
+
   const {
       product_Name,
       picture,
@@ -17,8 +24,8 @@ function to_History(req, res) {
 
 
   const sql = `INSERT INTO history(
-      product_Name, picture, start_Date, return_Date, status, user_ID, penalty, quantity, price, name
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      product_Name, picture, start_Date, return_Date, status, user_ID, penalty, quantity, price, name, Treturns
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
   const sql2 = `INSERT INTO user_notification(
       product_Name, message, user_ID, date
   ) VALUES (?, ?, ?, ?)`;
@@ -28,7 +35,7 @@ function to_History(req, res) {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   const Starto = date.toLocaleDateString('en-US', options);
 
-  db.query(sql, [product_Name, picture, start_Date, return_Date, status, user_ID, penalty, quantity, price, name], (err, result) => {
+  db.query(sql, [product_Name, picture, start_Date, return_Date, status, user_ID, penalty, quantity, price, name, currentDate], (err, result) => {
       if (err) {
           return res.status(500).json({ error: "Error inserting into history" });
       }
