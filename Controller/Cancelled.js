@@ -51,10 +51,9 @@ function CancelledItems(req, res) {
                 }
 
                 req.io.emit('canceled', { 
-                    id, 
                     picture,
                     name,
-                    Price:price,
+                    price,
                     start_Date,
                     return_Date,
                     user_ID,
@@ -63,6 +62,9 @@ function CancelledItems(req, res) {
                     status,
                     item_id,
                     size,
+                    id,
+                    code,
+                    sub_Total,
                     Today
                 });
 
