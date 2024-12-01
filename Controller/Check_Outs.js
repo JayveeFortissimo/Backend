@@ -4,26 +4,25 @@ import db from '../Model/Database.js';
 function CheckOut(req, res) {
     const Datas = req.body;
 
-    const sql = `INSERT INTO check_out(
-                                       name,
-                                      picture,
-                                      product_Name,
-                                       size,
-                                       start_Date,
-                                       return_Date,
-                                       price,
-                                       quantity,
-                                       subTotal,
-                                       user_ID,
-                                       status,
-                                       item_id,
-                                       code,
-                                       Today,
-                                       Pickuped,
-                                       returned,
-                                       type
-                                       ) VALUES ?`;
-
+    const sql = `INSERT INTO check_out( 
+                        name, 
+                        picture, 
+                        product_Name, 
+                        size, 
+                        start_Date, 
+                        return_Date, 
+                        price, 
+                        quantity, 
+                        subTotal, 
+                        user_ID, 
+                        status, 
+                        item_id, 
+                        code, 
+                        Today, 
+                        Pickuped, 
+                        returned, 
+                        type 
+                    ) VALUES ?`;
 
     const sql2 = `UPDATE size_table SET quantity = quantity - ? WHERE item_id = ? AND sizes=?`;
     const sql3 = `INSERT INTO adminnotifications(message, dates, user_ID) VALUES (?,?,?)`;
@@ -52,12 +51,14 @@ function CheckOut(req, res) {
         pro.type
     ]);
 
+    // Insert checkout data
     db.query(sql, [values], (err) => {
         if (err) return res.status(500).json({ message: 'Data not submitted successfully' });
 
+        // Emit real-time checkout data
         req.io.emit('newCheckOut', {
             checkouts: Datas.map(pro => ({
-                name:pro.name,
+                name: pro.name,
                 picture: pro.picture,
                 product_Name: pro.product_Name,
                 size: pro.size,
@@ -71,22 +72,20 @@ function CheckOut(req, res) {
             }))
         });
 
-
-        let updatesDone = 0; 
-
-        
+        let updatesDone = 0;
+        // Update size_table for each item
         Datas.forEach((pro, index) => {
             db.query(sql2, [pro.quantity, pro.item_id, pro.size], (err) => {
                 if (err) console.error(`Error updating size_table for item_id ${pro.item_id}:`, err);
-                
-                updatesDone++; 
 
-                
+                updatesDone++;
+
                 if (updatesDone === Datas.length) {
-                   
+                    // Insert admin notification
                     db.query(sql3, [message, startDate, pro.user_ID], (err) => {
                         if (err) return res.status(500).json("Problem with admin notification");
 
+                        // Emit admin notification
                         req.io.emit('newAdminNotification', {
                             message,
                             date: startDate,
@@ -95,6 +94,31 @@ function CheckOut(req, res) {
 
                         req.io.emit('bellsDash');
 
+                        // Emit updated reservation trends
+                        const trendsSql = `
+                            SELECT DATE_FORMAT(start_Date, '%M') AS month, SUM(total_count) AS total_count
+                            FROM (
+                                SELECT start_Date, COUNT(*) AS total_count FROM check_out GROUP BY start_Date
+                                UNION ALL
+                                SELECT start_Date, COUNT(*) AS total_count FROM history GROUP BY start_Date
+                            ) AS combined_counts
+                            GROUP BY month
+                            ORDER BY MONTH(STR_TO_DATE(month, '%M'))
+                        `;
+                        db.query(trendsSql, (error, results) => {
+                            if (error) {
+                                console.error('Error fetching reservation trends:', error);
+                            } else {
+                                const formattedResults = results.map(row => ({
+                                    Date: row.month,
+                                    total_count: row.total_count
+                                }));
+
+                                // Emit updated reservation trends to frontend
+                                req.io.emit('updatedReservationTrends', formattedResults);
+                            }
+                        });
+
                         return res.status(201).json("Data Submitted Successfully");
                     });
                 }
@@ -102,8 +126,6 @@ function CheckOut(req, res) {
         });
     });
 }
-
-
 
 
 
