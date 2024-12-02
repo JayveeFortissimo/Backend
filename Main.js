@@ -15,6 +15,7 @@ const httpServer = createServer(app);
 app.use(cors({
   origin: [
     'cristobals.vercel.app',
+    'http://localhost:5173/'
   ],
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   credentials: true,
@@ -30,7 +31,8 @@ app.use('/uploads', express.static('./uploads'));
 const io = new Server(httpServer, {
   cors: {
     origin: [
-     'cristobals.vercel.app'
+     'cristobals.vercel.app',
+     'http://localhost:5173/'
     ],
     methods: ['GET', 'POST'],
     credentials: true
