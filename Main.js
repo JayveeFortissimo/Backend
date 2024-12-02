@@ -16,7 +16,7 @@ app.use(cors({
   origin: [
     'cristobals.vercel.app',
     'http://localhost:5173/',
-     'http://localhost:8000'
+     'http://localhost:8080'
   ],
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   credentials: true,
@@ -34,7 +34,7 @@ const io = new Server(httpServer, {
     origin: [
      'cristobals.vercel.app',
      'http://localhost:5173/',
-      'http://localhost:8000'
+      'http://localhost:8080'
     ],
     methods: ['GET', 'POST'],
     credentials: true
