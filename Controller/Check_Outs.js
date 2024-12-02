@@ -144,7 +144,7 @@ function CheckOut(req, res) {
                                             SumAll: totalQuantityResult[0],
                                             INFO: itemDetailsResult
                                         }
-                                        console.log("Datas", AllDatas)
+                                    
                                         req.io.emit('updatedItemInfo', AllDatas);
 
                                         return res.status(201).json("Data Submitted Successfully");
