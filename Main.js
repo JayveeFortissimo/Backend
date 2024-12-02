@@ -14,6 +14,7 @@ const httpServer = createServer(app);
 // Middleware configuration
 app.use(cors({
   origin: [
+    'cristobals.vercel.app/',
     'cristobals.vercel.app',
     'http://localhost:5173/',
      'http://localhost:8080'
@@ -32,6 +33,7 @@ app.use('/uploads', express.static('./uploads'));
 const io = new Server(httpServer, {
   cors: {
     origin: [
+     'cristobals.vercel.app/',
      'cristobals.vercel.app',
      'http://localhost:5173/',
       'http://localhost:8080'
