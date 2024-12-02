@@ -119,13 +119,46 @@ function CheckOut(req, res) {
                             }
                         });
 
-                        return res.status(201).json("Data Submitted Successfully");
+                        // Additional Queries for Total Quantity and Item Info
+                        const sqlTotalQuantity = `SELECT SUM(quantity) AS totalQuantity FROM size_table`;
+                        const sqlItemDetails = `
+                            SELECT 
+                                items.*, 
+                                size_table.sizes, 
+                                size_table.quantity 
+                            FROM items 
+                            LEFT JOIN size_table 
+                            ON items.id = size_table.item_id
+                        `;
+
+                        db.query(sqlTotalQuantity, (err, totalQuantityResult) => {
+                            if (err) {
+                                console.error("Error fetching total quantity:", err);
+                            } else {
+                                db.query(sqlItemDetails, (err, itemDetailsResult) => {
+                                    if (err) {
+                                        console.error("Error fetching item details:", err);
+                                    } else {
+
+                                        const AllDatas = {
+                                            SumAll: totalQuantityResult[0],
+                                            INFO: itemDetailsResult
+                                        }
+                                        console.log("Datas", AllDatas)
+                                        req.io.emit('updatedItemInfo', AllDatas);
+
+                                        return res.status(201).json("Data Submitted Successfully");
+                                    }
+                                });
+                            }
+                        });
                     });
                 }
             });
         });
     });
 }
+
 
 
 
