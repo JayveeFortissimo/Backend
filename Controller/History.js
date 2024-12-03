@@ -20,6 +20,7 @@ function to_History(req, res) {
       name,
       size,
       item_id,  
+      
   } = req.body;
 
   const sql = `INSERT INTO history(
