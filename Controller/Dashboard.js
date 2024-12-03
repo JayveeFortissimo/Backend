@@ -195,6 +195,18 @@ function HistoryDashboard(req,res){
 
 
 
+
+function TotalRevenue(req,res){
+
+  const sql = `SELECT COUNT(subTotal) FROM history where status = Approved`;
+
+
+
+
+}
+
+
+
 export{
     TotalItems,
     TotalofReservation,
