@@ -194,15 +194,17 @@ function HistoryDashboard(req,res){
   }
 
 
+//!WAIT PA KO D2
+  function TotalIncome(req,res){
 
+    const sql = `SELECT Datenow AS month, SUM(subTotal) AS totalIncome FROM history GROUP BY Month`;
+    
+    db.query(sql,(err,result)=>{
+        if(err) return res.json("Cannot fetch sum of items");
+        const Total = result.reduce((a,b)=> a + parseInt(b.totalIncome),0);
 
-function TotalRevenue(req,res){
-
-  const sql = `SELECT COUNT(subTotal) FROM history where status = Approved`;
-
-
-
-
+        return res.status(200).json({AllResult: result, AllTotal: Total});
+    });
 }
 
 
