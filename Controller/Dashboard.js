@@ -242,7 +242,7 @@ function TotalIncome(req, res) {
   function PieChart(req, res) {
     const sql = `
         SELECT type, COUNT(type) AS count 
-        FROM history
+        FROM check_out
         GROUP BY type
     `;
 
@@ -252,7 +252,6 @@ function TotalIncome(req, res) {
             console.error("Error fetching data:", err);
             res.status(500).send("Server error");
         } else {
-            // Sending the results to the frontend
             res.json(results);
         }
     });
