@@ -241,7 +241,7 @@ function TotalIncome(req, res) {
   //!PieChart
   function PieChart(req, res) {
     const sql = `
-        SELECT product_Name, COUNT(product_Name) AS count 
+        SELECT product_Name, COUNT(type) AS count 
         FROM history
         GROUP BY type
     `;
