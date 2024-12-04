@@ -238,6 +238,26 @@ function TotalIncome(req, res) {
   }
   
   
+  //!PieChart
+  function PieChart(req, res) {
+    const sql = `
+        SELECT type, COUNT(type) AS count 
+        FROM history
+        GROUP BY type
+    `;
+
+    // Execute the query
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error("Error fetching data:", err);
+            res.status(500).send("Server error");
+        } else {
+            // Sending the results to the frontend
+            res.json(results);
+        }
+    });
+}
+
 
 
 export{
@@ -248,5 +268,6 @@ export{
     ReservationTrends,
     Today,
     HistoryDashboard,
-    TotalIncome
+    TotalIncome,
+    PieChart
 }

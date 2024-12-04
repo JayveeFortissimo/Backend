@@ -9,7 +9,8 @@ import {
      ReservationTrends,
      Today,
      HistoryDashboard,
-     TotalIncome
+     TotalIncome,
+     PieChart
     } from '../Controller/Dashboard.js';
 
 const DashboardAdmin  = express.Router();
@@ -23,5 +24,6 @@ DashboardAdmin.get('/Today',Today);
 DashboardAdmin.get('/DashboardHistory',HistoryDashboard);
 
 DashboardAdmin.get('/TotalIncome',TotalIncome);
+DashboardAdmin.get('/PieChart',PieChart);
 
 export default DashboardAdmin;
