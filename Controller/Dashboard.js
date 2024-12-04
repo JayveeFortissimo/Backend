@@ -242,7 +242,7 @@ function TotalIncome(req, res) {
   function PieChart(req, res) {
     const sql = `
         SELECT type, COUNT(type) AS count 
-        FROM check_out
+        FROM history
         GROUP BY type
     `;
 
