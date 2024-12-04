@@ -196,33 +196,47 @@ function HistoryDashboard(req,res){
 
 //!WAIT PA KO D2
 function TotalIncome(req, res) {
-    const sql1 = `SELECT start_Date AS month, SUM(subTotal) AS totalIncome FROM check_out WHERE status = 'Approved' GROUP BY Month`;
-    const sql2 = `SELECT start_Date AS month, SUM(subTotal) AS totalIncome FROM history GROUP BY Month`;
- 
+    const sql1 = `SELECT start_Date AS month, SUM(subTotal) AS totalIncome FROM check_out WHERE status = 'Approved' GROUP BY MONTH(start_Date)`;
+    const sql2 = `SELECT start_Date AS month, SUM(subTotal) AS totalIncome FROM history GROUP BY MONTH(start_Date)`;
+  
+    // Execute both queries in parallel
     db.query(sql1, (err1, result1) => {
       if (err1) return res.json("Cannot fetch sum of items from check_out");
   
       db.query(sql2, (err2, result2) => {
         if (err2) return res.json("Cannot fetch sum of items from history");
   
-      
+        // Merging the results from both tables by month
         const mergedResults = [...result1];
-        
+  
         result2.forEach(item2 => {
           const existingItem = mergedResults.find(item1 => item1.month === item2.month);
+  
           if (existingItem) {
-            existingItem.totalIncome += parseInt(item2.totalIncome); 
+            existingItem.totalIncome += parseInt(item2.totalIncome); // Adding the values
           } else {
-            mergedResults.push(item2); 
+            mergedResults.push(item2); // Adding new month from history table
           }
         });
   
-        const Total = mergedResults.reduce((a, b) => a + parseInt(b.totalIncome), 0);
+        // Format the month as 'Month Year' (e.g., 'December 2024')
+        const formattedResults = mergedResults.map(item => {
+          const date = new Date(item.month);
+          const formattedMonth = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+          return {
+            month: formattedMonth,
+            totalIncome: item.totalIncome
+          };
+        });
   
-        return res.status(200).json({ AllResult: mergedResults, AllTotal: Total });
+        // Calculate the total income from both tables combined
+        const Total = formattedResults.reduce((a, b) => a + parseInt(b.totalIncome), 0);
+  
+        return res.status(200).json({ AllResult: formattedResults, AllTotal: Total });
       });
     });
   }
+  
   
 
 
