@@ -196,7 +196,7 @@ function HistoryDashboard(req,res){
 
 //!WAIT PA KO D2
 function TotalIncome(req, res) {
-    const sql1 = `SELECT start_Date AS month, SUM(subTotal) AS totalIncome FROM check_out WHERE status = 'Approved' GROUP BY MONTH(start_Date)`;
+    const sql1 = `SELECT start_Date AS month, SUM(subTotal) AS totalIncome FROM check_out WHERE Pickuped = 'ITEM PICKED UP ALREADY' GROUP BY MONTH(start_Date)`;
     const sql2 = `SELECT start_Date AS month, SUM(subTotal) AS totalIncome FROM history GROUP BY MONTH(start_Date)`;
   
     // Execute both queries in parallel
