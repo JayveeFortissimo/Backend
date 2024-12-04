@@ -241,9 +241,9 @@ function TotalIncome(req, res) {
   //!PieChart
   function PieChart(req, res) {
     const sql = `
-        SELECT product_Name, SUM(count) AS count 
+        SELECT product_Name, COUNT(product_Name) AS count 
         FROM history
-        GROUP BY product_Name
+        GROUP BY  product_Name
     `;
 
     // Execute the query
@@ -256,7 +256,6 @@ function TotalIncome(req, res) {
         }
     });
 }
-
 
 
 
