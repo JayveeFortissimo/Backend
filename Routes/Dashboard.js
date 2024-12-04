@@ -8,7 +8,8 @@ import {
      TotalCacelled, 
      ReservationTrends,
      Today,
-     HistoryDashboard
+     HistoryDashboard,
+     TotalIncome
     } from '../Controller/Dashboard.js';
 
 const DashboardAdmin  = express.Router();
@@ -21,6 +22,6 @@ DashboardAdmin.get('/AllTrends',ReservationTrends);
 DashboardAdmin.get('/Today',Today);
 DashboardAdmin.get('/DashboardHistory',HistoryDashboard);
 
-
+DashboardAdmin.get('/TotalIncome',TotalIncome);
 
 export default DashboardAdmin;

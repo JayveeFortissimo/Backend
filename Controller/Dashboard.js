@@ -195,18 +195,35 @@ function HistoryDashboard(req,res){
 
 
 //!WAIT PA KO D2
-  function TotalIncome(req,res){
-
-    const sql = `SELECT Datenow AS month, SUM(subTotal) AS totalIncome FROM history GROUP BY Month`;
-    
-    db.query(sql,(err,result)=>{
-        if(err) return res.json("Cannot fetch sum of items");
-        const Total = result.reduce((a,b)=> a + parseInt(b.totalIncome),0);
-
-        return res.status(200).json({AllResult: result, AllTotal: Total});
+function TotalIncome(req, res) {
+    const sql1 = `SELECT start_Date AS month, SUM(subTotal) AS totalIncome FROM check_out WHERE status = 'Approved' GROUP BY Month`;
+    const sql2 = `SELECT start_Date AS month, SUM(subTotal) AS totalIncome FROM history GROUP BY Month`;
+ 
+    db.query(sql1, (err1, result1) => {
+      if (err1) return res.json("Cannot fetch sum of items from check_out");
+  
+      db.query(sql2, (err2, result2) => {
+        if (err2) return res.json("Cannot fetch sum of items from history");
+  
+      
+        const mergedResults = [...result1];
+        
+        result2.forEach(item2 => {
+          const existingItem = mergedResults.find(item1 => item1.month === item2.month);
+          if (existingItem) {
+            existingItem.totalIncome += parseInt(item2.totalIncome); 
+          } else {
+            mergedResults.push(item2); 
+          }
+        });
+  
+        const Total = mergedResults.reduce((a, b) => a + parseInt(b.totalIncome), 0);
+  
+        return res.status(200).json({ AllResult: mergedResults, AllTotal: Total });
+      });
     });
-}
-
+  }
+  
 
 
 export{
@@ -216,5 +233,6 @@ export{
     TotalCacelled,
     ReservationTrends,
     Today,
-    HistoryDashboard
+    HistoryDashboard,
+    TotalIncome
 }
